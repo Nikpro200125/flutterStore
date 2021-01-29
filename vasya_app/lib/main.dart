@@ -13,6 +13,7 @@ class Appl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           textTheme: GoogleFonts.comfortaaTextTheme(
         Theme.of(context).textTheme,
