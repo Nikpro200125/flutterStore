@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     CustomInput(hintText: 'Email...',),
                     CustomInput(hintText: 'Password...',),
                     CustomBtn(
-                      text: 'Войти',
+                      text: 'Создать',
                       outlineBtn: false,
                       onPressed: (){
                         print('Clicked login btn');
@@ -43,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 16.0),
                   child: CustomBtn(
-                    text: 'Войти',
+                    text: 'Уже есть! Войти',
                     onPressed: () {
                       Navigator.pop(context);
                     },
