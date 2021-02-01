@@ -15,9 +15,11 @@ class Appl extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          textTheme: GoogleFonts.comfortaaTextTheme(
-        Theme.of(context).textTheme,
-      )),
+        textTheme: GoogleFonts.comfortaaTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        accentColor: Color(0xFFFF1e00),
+      ),
       home: LandingPage(),
     );
   }
