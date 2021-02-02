@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
-import 'package:vasya_app/widgets/custom_btn.dart';
 
 class CategoryPage extends StatelessWidget {
   final String category;
@@ -39,7 +38,7 @@ class CategoryPage extends StatelessWidget {
                   return ListView(
                     padding: EdgeInsets.only(
                       top: 90,
-                      bottom: 90,
+                      bottom: 12,
                     ),
                     children: snapshot.data.docs.map((document) {
                       return Container(
@@ -58,31 +57,29 @@ class CategoryPage extends StatelessWidget {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  "${document.data()['logo']}",
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  bottom: 5,
-                                ),
-                                child: Container(
-                                  child: Text(
-                                    "${document.data()['name']}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.indigo,
-                                    ),
+                                child: ColorFiltered(
+                                  child: Image.network(
+                                    "${document.data()['logo']}",
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black54,
+                                    BlendMode.darken,
                                   ),
                                 ),
                               ),
-                              bottom: 0,
-                              left: 0,
+                            ),
+                            Center(
+                              child: Container(
+                                child: Text(
+                                  "${document.data()['name']}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 26,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -100,34 +97,7 @@ class CategoryPage extends StatelessWidget {
             ),
             CustomActionBar(
               title: "Товары",
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12.0),
-                    topRight: Radius.circular(12.0),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
-                      spreadRadius: 1.0,
-                      blurRadius: 30.0,
-                    ),
-                  ],
-                ),
-                child: CustomBtn(
-                  text: 'Все категории',
-                  outlineBtn: true,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
+              hasBackArrow: true,
             ),
           ],
         ),

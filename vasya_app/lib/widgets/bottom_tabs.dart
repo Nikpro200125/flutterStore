@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class BottomTabs extends StatefulWidget {
   final int selectedTab;
   final Function(int) tabPressed;
+
   BottomTabs({this.selectedTab, this.tabPressed});
 
   @override
@@ -44,9 +45,9 @@ class _BottomTabsState extends State<BottomTabs> {
             BottomTabBtn(
               path: "assets/images/tab_search.png",
               selected: _selectedTab == 1 ? true : false,
-                onPressed: () {
-                  widget.tabPressed(1);
-                },
+              onPressed: () {
+                widget.tabPressed(1);
+              },
             ),
             BottomTabBtn(
               path: "assets/images/tab_saved.png",
@@ -55,12 +56,31 @@ class _BottomTabsState extends State<BottomTabs> {
                 widget.tabPressed(2);
               },
             ),
-            BottomTabBtn(
-              path: "assets/images/tab_logout.png",
-              selected: _selectedTab == 3 ? true : false,
-              onPressed: () {
+            GestureDetector(
+              onDoubleTap: (){
                 FirebaseAuth.instance.signOut();
               },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  vertical: 28,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: _selectedTab == 3
+                          ? Theme.of(context).accentColor
+                          : Colors.transparent,
+                    ),
+                  ),
+                ),
+                child: Image(
+                  image: AssetImage('assets/images/tab_logout.png'),
+                  height: 22.0,
+                  color:
+                  _selectedTab == 3 ? Theme.of(context).accentColor : Colors.black,
+                ),
+              ),
             ),
           ],
         ));

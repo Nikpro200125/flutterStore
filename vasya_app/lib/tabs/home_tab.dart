@@ -58,31 +58,29 @@ class HomeTab extends StatelessWidget {
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
-                                child: Image.network(
-                                  "${document.data()['logo']}",
-                                  fit: BoxFit.fitWidth,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 10,
-                                  bottom: 5,
-                                ),
-                                child: Container(
-                                  child: Text(
-                                    "${document.data()['name']}",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                      color: Colors.indigo,
-                                    ),
+                                child: ColorFiltered(
+                                  child: Image.network(
+                                    "${document.data()['logo']}",
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                  colorFilter: ColorFilter.mode(
+                                    Colors.black54,
+                                    BlendMode.darken,
                                   ),
                                 ),
                               ),
-                              bottom: 0,
-                              left: 0,
+                            ),
+                            Container(
+                              child: Center(
+                                child: Text(
+                                  "${document.data()['name']}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 26,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
