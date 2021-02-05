@@ -37,13 +37,13 @@ class HomeTab extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => CategoryPage(
                               category: document.data()['name'],
-                              documentId: document.id,
+                              documentIdCategory: document.id,
                             ),
                           ),
                         );
                       },
                       child: Container(
-                        height: 150,
+                        height: 80,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                         ),

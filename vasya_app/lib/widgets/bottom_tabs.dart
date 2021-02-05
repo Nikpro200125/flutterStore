@@ -50,7 +50,7 @@ class _BottomTabsState extends State<BottomTabs> {
               },
             ),
             BottomTabBtn(
-              path: "assets/images/tab_saved.png",
+              path: "assets/images/tab_cart.png",
               selected: _selectedTab == 2 ? true : false,
               onPressed: () {
                 widget.tabPressed(2);
@@ -62,7 +62,7 @@ class _BottomTabsState extends State<BottomTabs> {
               },
               child: Container(
                 padding: EdgeInsets.symmetric(
-                  vertical: 28,
+                  vertical: 20,
                   horizontal: 16,
                 ),
                 decoration: BoxDecoration(
@@ -102,7 +102,7 @@ class BottomTabBtn extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: 28,
+          vertical: 20,
           horizontal: 16,
         ),
         decoration: BoxDecoration(

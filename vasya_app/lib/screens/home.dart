@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vasya_app/tabs/home_tab.dart';
-import 'package:vasya_app/tabs/saved_tab.dart';
+import 'package:vasya_app/tabs/cart_tab.dart';
 import 'package:vasya_app/tabs/search_tab.dart';
 import 'package:vasya_app/widgets/bottom_tabs.dart';
 
@@ -42,21 +42,23 @@ class _HomePageState extends State<HomePage> {
               children: [
                 HomeTab(),
                 SearchTab(),
-                SavedTab(),
+                CartTab(),
               ],
             ),
           ),
           BottomTabs(
             selectedTab: _selectedTab,
             tabPressed: (num) {
-              setState(() {
-                _selectedTab = num;
-                _pageController.animateToPage(
-                  num,
-                  duration: Duration(microseconds: 300),
-                  curve: Curves.easeOutCubic,
-                );
-              });
+              setState(
+                () {
+                  _selectedTab = num;
+                  _pageController.animateToPage(
+                    num,
+                    duration: Duration(microseconds: 300),
+                    curve: Curves.easeOutCubic,
+                  );
+                },
+              );
             },
           ),
         ],

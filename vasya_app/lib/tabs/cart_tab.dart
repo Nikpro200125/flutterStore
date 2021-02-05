@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
-class SavedTab extends StatelessWidget {
+class CartTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -9,11 +9,11 @@ class SavedTab extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              "Home Tab",
+              "Cart",
             ),
           ),
           CustomActionBar(
-            title: "Сохраненные",
+            title: "Корзина",
           ),
         ],
       ),

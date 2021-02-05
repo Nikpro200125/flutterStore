@@ -4,28 +4,23 @@ import 'package:vasya_app/constants.dart';
 class CustomActionBar extends StatelessWidget {
   final String title;
   final bool hasBackArrow;
+  final bool hasBackground;
 
-  CustomActionBar({this.title, this.hasBackArrow});
+  CustomActionBar({this.title, this.hasBackArrow, this.hasBackground});
 
   @override
   Widget build(BuildContext context) {
     bool _hasBackArrow = hasBackArrow ?? false;
+    bool _hasBackground = hasBackground ?? true;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.white,
-            Colors.white.withOpacity(0),
-          ],
-          begin: Alignment(0, 0),
-          end: Alignment(0, 1),
-        ),
+        color: _hasBackground ? Colors.white : Colors.transparent,
       ),
       padding: EdgeInsets.only(
-        top: 45,
+        top: 35,
         left: 24,
         right: 24,
-        bottom: 20,
+        bottom: 10,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

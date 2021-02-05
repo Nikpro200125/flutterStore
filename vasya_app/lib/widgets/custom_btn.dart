@@ -13,7 +13,10 @@ class CustomBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 60.0,
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        height: 50.0,
         alignment: Alignment.center,
         decoration: BoxDecoration(
             color: outlineBtn ?? false ? Colors.transparent : Colors.black,

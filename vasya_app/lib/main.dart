@@ -18,7 +18,9 @@ class Appl extends StatelessWidget {
         textTheme: GoogleFonts.comfortaaTextTheme(
           Theme.of(context).textTheme,
         ),
-        accentColor: Color(0xFFFF1e00),
+         primaryColor: Color(0xFFEBDCB2),
+         accentColor: Color(0xFFEAF4425),
+        scaffoldBackgroundColor: Colors.white,
       ),
       home: LandingPage(),
     );
