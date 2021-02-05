@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/screens/product_page.dart';
@@ -88,12 +89,27 @@ class SupplierPage extends StatelessWidget {
                         return CircularProgressIndicator();
                       },
                     ),
-                    Center(
-                      child: Text(
-                        'Товары поставщика',
-                        style: Constants.regularHeading,
+                    Container(
+                      margin: EdgeInsets.only(
+                        bottom: 10,
+                      ),
+                      child: Center(
+                        child: Text(
+                          'Товары поставщика',
+                          style: Constants.regularHeading,
+                        ),
                       ),
                     ),
+                    if (snapshot.data.size == 0)
+                      Center(
+                        child: Text(
+                          'У этого поставщика пока нет товаров...',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                     Column(
                       children: snapshot.data.docs.map(
                         (document) {
@@ -102,14 +118,15 @@ class SupplierPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ProductPage(
-                                          product: document.data()['name'],
-                                          documentIdProduct: document.id,
-                                          documentIdCategory:
-                                              documentIdCategory,
-                                          documentIdSupplier:
-                                              documentIdSupplier,
-                                        )),
+                                  builder: (context) => ProductPage(
+                                    product: document.data()['name'],
+                                    documentIdProduct: document.id,
+                                    documentIdCategory: documentIdCategory,
+                                    documentIdSupplier: documentIdSupplier,
+                                    productLogo: document.data()['logo'],
+                                    productPrice: document.data()['price'],
+                                  ),
+                                ),
                               );
                             },
                             child: Container(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
@@ -19,6 +20,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Focus Node for input fields
   FocusNode _passwordFocusNode;
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   @override
   void initState() {

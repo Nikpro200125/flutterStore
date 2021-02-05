@@ -9,6 +9,8 @@ class ProductPage extends StatelessWidget {
   final String documentIdProduct;
   final String documentIdSupplier;
   final String documentIdCategory;
+  final String productLogo;
+  final int productPrice;
   final CollectionReference categories =
       FirebaseFirestore.instance.collection('categories');
 
@@ -16,7 +18,9 @@ class ProductPage extends StatelessWidget {
       {this.documentIdProduct,
       this.documentIdSupplier,
       this.documentIdCategory,
-      this.product});
+      this.product,
+      this.productLogo,
+      this.productPrice});
 
   @override
   Widget build(BuildContext context) {
@@ -28,84 +32,94 @@ class ProductPage extends StatelessWidget {
         .doc(documentIdProduct);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          FutureBuilder(
-            future: doc.get(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Scaffold(
-                  body: Center(
-                    child: Text(
-                      "Error ${snapshot.error}",
+      body: Container(
+        child: Stack(
+          children: [
+            FutureBuilder(
+              future: doc.get(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Scaffold(
+                    body: Center(
+                      child: Text(
+                        "Error ${snapshot.error}",
+                      ),
                     ),
-                  ),
-                );
-              }
+                  );
+                }
 
-              if (snapshot.connectionState == ConnectionState.done) {
-                return ListView(
-                  children: [
-                    Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: 63,
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return ListView(
+                    padding: EdgeInsets.only(
+                      bottom: 70,
+                    ),
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 63,
+                            ),
+                            height: 300,
+                            child: Image.network(
+                              '${snapshot.data.data()['logo']}',
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                          height: 300,
-                          child: Image.network(
-                            '${snapshot.data.data()['logo']}',
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.all(12),
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  bottom: 16,
-                                  top: 10,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    "Описание",
-                                    style: Constants.regularHeading,
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.all(12),
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 16,
+                                    top: 10,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Описание",
+                                      style: Constants.regularHeading,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Center(
-                                child: Text(
-                                    "${snapshot.data.data()['description']}"),
-                              ),
-                            ],
+                                Center(
+                                  child: Text(
+                                      "${snapshot.data.data()['description']}"),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              }
+                        ],
+                      ),
+                    ],
+                  );
+                }
 
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-          ),
-          CustomActionBar(
-            hasBackArrow: true,
-            title: product,
-          ),
-          Positioned(
-            bottom: 0,
-            child: AddToCard(),
-          ),
-        ],
+                return Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              },
+            ),
+            CustomActionBar(
+              hasBackArrow: true,
+              title: product,
+            ),
+            Positioned(
+              bottom: 0,
+              child: AddToCard(
+                documentIdSupplier: documentIdSupplier,
+                documentIdProduct: documentIdProduct,
+                image: productLogo,
+                price: productPrice,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -54,7 +54,6 @@ class HomeTab extends StatelessWidget {
                         child: Stack(
                           children: [
                             Container(
-                              height: 150,
                               width: double.infinity,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
