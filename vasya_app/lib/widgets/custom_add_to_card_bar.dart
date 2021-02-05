@@ -6,15 +6,17 @@ import 'package:vasya_app/widgets/custom_btn.dart';
 
 class AddToCard extends StatefulWidget {
   final String documentIdProduct;
-  final String documentIdSupplier;
+  final String supplier;
   final String image;
   final int price;
+  final String product;
 
   AddToCard(
       {this.documentIdProduct,
-      this.documentIdSupplier,
       this.image,
-      this.price});
+      this.price,
+      this.supplier,
+      this.product});
 
   @override
   _AddToCardState createState() => _AddToCardState();
@@ -37,10 +39,15 @@ class _AddToCardState extends State<AddToCard> {
   }
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  final SnackBar snackBar =
-      SnackBar(content: Text('Продукт добавлен в корзину!'));
-  final SnackBar snackBarError =
-      SnackBar(content: Text('Нужно выбрать хотя бы один товар...'));
+  final SnackBar snackBar = SnackBar(
+    content: Text('Продукт добавлен в корзину!'),
+    duration: Duration(milliseconds: 1500),
+  );
+  final SnackBar snackBarError = SnackBar(
+    content: Text('Нужно выбрать хотя бы один товар...'),
+    animation: null,
+    duration: Duration(milliseconds: 1500),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +76,11 @@ class _AddToCardState extends State<AddToCard> {
                     .doc(widget.documentIdProduct)
                     .set(
                   {
-                    'supplier': widget.documentIdSupplier,
-                    'product': widget.documentIdProduct,
+                    'supplier': widget.supplier,
                     'quantity': counter,
                     'logo': widget.image,
                     'price': widget.price,
+                    'product': widget.product,
                   },
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);

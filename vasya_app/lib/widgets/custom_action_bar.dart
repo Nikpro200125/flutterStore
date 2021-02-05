@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/tabs/cart_tab.dart';
 
 class CustomActionBar extends StatelessWidget {
   final String title;
@@ -56,31 +57,36 @@ class CustomActionBar extends StatelessWidget {
               title,
               style: Constants.boldHeading,
             ),
-          Container(
-              width: 42,
-              height: 42,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: StreamBuilder(
-                stream: users.doc(user).collection('cart').snapshots(),
-                builder: (context, snapshot) {
-                  int total = 0;
-                  if(snapshot.connectionState == ConnectionState
-                  .active)
-                    total = snapshot.data.docs.length;
-                  return Text(
-                    total.toString(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  );
-                },
-              )),
+          GestureDetector(
+            // onTap: () {
+            //   Navigator.push(context, MaterialPageRoute(builder: (context) => CartTab()));
+            // },
+            child: Container(
+                width: 42,
+                height: 42,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: StreamBuilder(
+                  stream: users.doc(user).collection('cart').snapshots(),
+                  builder: (context, snapshot) {
+                    int total = 0;
+                    if(snapshot.connectionState == ConnectionState
+                    .active)
+                      total = snapshot.data.docs.length;
+                    return Text(
+                      total.toString(),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                )),
+          ),
         ],
       ),
     );

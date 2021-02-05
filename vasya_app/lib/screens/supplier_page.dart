@@ -10,7 +10,7 @@ class SupplierPage extends StatelessWidget {
   final String documentIdSupplier;
   final String documentIdCategory;
   final CollectionReference categories =
-      FirebaseFirestore.instance.collection('categories');
+  FirebaseFirestore.instance.collection('categories');
 
   SupplierPage(
       {this.supplier, this.documentIdSupplier, this.documentIdCategory});
@@ -78,7 +78,8 @@ class SupplierPage extends StatelessWidget {
                                     ),
                                     Center(
                                       child: Text(
-                                          "${snapshot2.data.data()['description']}"),
+                                          "${snapshot2.data
+                                              .data()['description']}"),
                                     ),
                                   ],
                                 ),
@@ -112,20 +113,22 @@ class SupplierPage extends StatelessWidget {
                       ),
                     Column(
                       children: snapshot.data.docs.map(
-                        (document) {
+                            (document) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ProductPage(
-                                    product: document.data()['name'],
-                                    documentIdProduct: document.id,
-                                    documentIdCategory: documentIdCategory,
-                                    documentIdSupplier: documentIdSupplier,
-                                    productLogo: document.data()['logo'],
-                                    productPrice: document.data()['price'],
-                                  ),
+                                  builder: (context) =>
+                                      ProductPage(
+                                        product: document.data()['name'],
+                                        documentIdProduct: document.id,
+                                        documentIdCategory: documentIdCategory,
+                                        documentIdSupplier: documentIdSupplier,
+                                        productLogo: document.data()['logo'],
+                                        productPrice: document.data()['price'],
+                                        supplier : supplier,
+                                      ),
                                 ),
                               );
                             },

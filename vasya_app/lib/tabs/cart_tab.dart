@@ -71,9 +71,9 @@ class CartTab extends StatelessWidget {
                                 child: Text(
                                   "${document.data()['product']}",
                                   style: TextStyle(
-                                    fontWeight: FontWeight.normal,
+                                    fontWeight: FontWeight.w600,
                                     fontSize: 18,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,
@@ -90,7 +90,7 @@ class CartTab extends StatelessWidget {
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 18,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,
@@ -103,11 +103,11 @@ class CartTab extends StatelessWidget {
                                   left: 10,
                                 ),
                                 child: Text(
-                                  "Итого: ${document.data()['quantity']} × ${document.data()['price']}",
+                                  "Итого: ${document.data()['quantity']} × ${document.data()['price']}₽",
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 18,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,

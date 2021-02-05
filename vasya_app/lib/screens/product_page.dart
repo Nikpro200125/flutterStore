@@ -6,6 +6,7 @@ import 'package:vasya_app/widgets/custom_add_to_card_bar.dart';
 
 class ProductPage extends StatelessWidget {
   final String product;
+  final String supplier;
   final String documentIdProduct;
   final String documentIdSupplier;
   final String documentIdCategory;
@@ -20,7 +21,8 @@ class ProductPage extends StatelessWidget {
       this.documentIdCategory,
       this.product,
       this.productLogo,
-      this.productPrice});
+      this.productPrice,
+      this.supplier});
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +114,11 @@ class ProductPage extends StatelessWidget {
             Positioned(
               bottom: 0,
               child: AddToCard(
-                documentIdSupplier: documentIdSupplier,
+                supplier: supplier,
                 documentIdProduct: documentIdProduct,
                 image: productLogo,
                 price: productPrice,
+                product: product,
               ),
             ),
           ],
