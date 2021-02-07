@@ -18,7 +18,7 @@ class HomeTab extends StatelessWidget {
               if (snapshot.hasError) {
                 return Scaffold(
                   body: Center(
-                    child: Text('Error ${snapshot.error}'),
+                    child: Text('Ошибка ${snapshot.error}'),
                   ),
                 );
               }
@@ -37,7 +37,6 @@ class HomeTab extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => CategoryPage(
                               category: document.data()['name'],
-                              documentIdCategory: document.id,
                             ),
                           ),
                         );
@@ -97,7 +96,7 @@ class HomeTab extends StatelessWidget {
             },
           ),
           CustomActionBar(
-            title: "Главная",
+            title: "Категории",
           ),
         ],
       ),

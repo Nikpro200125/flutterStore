@@ -7,31 +7,28 @@ import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class SupplierPage extends StatelessWidget {
   final String supplier;
-  final String documentIdSupplier;
-  final String documentIdCategory;
+  final String category;
+  final String supplierId;
   final FirebaseService firebaseService = FirebaseService();
 
-  SupplierPage(
-      {this.supplier, this.documentIdSupplier, this.documentIdCategory});
+  SupplierPage({this.supplier, this.category, this.supplierId});
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference doc = firebaseService.categoriesRef
-        .doc(documentIdCategory)
-        .collection('suppliers')
-        .doc(documentIdSupplier);
-
     return Scaffold(
       body: Stack(
         children: [
           FutureBuilder<QuerySnapshot>(
-            future: doc.collection('products').get(),
+            future: firebaseService.productsRef
+                .where('category', isEqualTo: category)
+                .where('supplier', isEqualTo: supplier)
+                .get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
                   body: Center(
                     child: Text(
-                      "Error ${snapshot.error}",
+                      "Ошибка ${snapshot.error}",
                     ),
                   ),
                 );
@@ -41,16 +38,19 @@ class SupplierPage extends StatelessWidget {
                 return ListView(
                   children: [
                     FutureBuilder(
-                      future: doc.get(),
+                      future: firebaseService.suppliersRef
+                          .doc(supplierId)
+                          .get(),
                       builder: (context, snapshot2) {
                         if (snapshot2.connectionState == ConnectionState.done) {
                           return Column(
                             children: [
                               Container(
                                 margin: EdgeInsets.only(
-                                  top: 63,
+                                  top: 55,
                                 ),
                                 height: 300,
+                                width: MediaQuery.of(context).size.width,
                                 child: Image.network(
                                   '${snapshot2.data.data()['logo']}',
                                   fit: BoxFit.fill,
@@ -120,8 +120,6 @@ class SupplierPage extends StatelessWidget {
                                   builder: (context) => ProductPage(
                                     product: document.data()['name'],
                                     documentIdProduct: document.id,
-                                    documentIdCategory: documentIdCategory,
-                                    documentIdSupplier: documentIdSupplier,
                                     productLogo: document.data()['logo'],
                                     productPrice: document.data()['price'],
                                     supplier: supplier,

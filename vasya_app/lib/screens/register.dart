@@ -11,6 +11,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  double pad = 76.0;
+
   // Default Form Loading State
   bool _registerFormLoading = false;
 
@@ -106,13 +108,13 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      width: double.infinity,
+      width: MediaQuery.of(context).size.width,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 26),
+              margin: EdgeInsets.only(top: pad),
               child: Text(
                 'Добро пожаловать,\nсоздайте аккаунт',
                 textAlign: TextAlign.center,
@@ -130,6 +132,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     _passwordFocusNode.requestFocus();
                   },
                   textInputAction: TextInputAction.next,
+                  onTap: () {
+                    setState(() {
+                      pad = 26.0;
+                    });
+                  },
                 ),
                 CustomInput(
                   isPassword: true,
@@ -141,6 +148,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     _submitForm();
                   },
                   focusNode: _passwordFocusNode,
+                  onTap: () {
+                    setState(() {
+                      pad = 26.0;
+                    });
+                  },
                 ),
                 CustomBtn(
                   text: 'Создать',

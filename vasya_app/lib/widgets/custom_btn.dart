@@ -19,9 +19,9 @@ class CustomBtn extends StatelessWidget {
         height: 50.0,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: outlineBtn ?? false ? Colors.transparent : Colors.black,
+            color: outlineBtn ?? false ? Colors.transparent : Theme.of(context).accentColor,
             border: Border.all(
-              color: Colors.black,
+              color: Theme.of(context).accentColor,
               width: 2.0,
             ),
             borderRadius: BorderRadius.circular(12.0)),
@@ -35,7 +35,7 @@ class CustomBtn extends StatelessWidget {
                   text ?? 'Text',
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: outlineBtn ?? false ? Colors.black : Colors.white,
+                    color: outlineBtn ?? false ? Theme.of(context).accentColor : Colors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -49,7 +49,7 @@ class CustomBtn extends StatelessWidget {
                   width: 30.0,
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(
-                        outlineBtn ?? false ? Colors.black : Colors.white,
+                        outlineBtn ?? false ? Theme.of(context).accentColor : Colors.white,
                     ),
                   ),
                 ),

@@ -13,6 +13,8 @@ class AuthorizationPage extends StatefulWidget {
 }
 
 class _AuthorizationPageState extends State<AuthorizationPage> {
+  double pad = 76.0;
+
   // Default Form Loading State
   bool _signInFormLoading = false;
 
@@ -77,7 +79,8 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
         return 'Почта имеет неверый формат';
       } else if (e.code == 'unknown') {
         return 'Ошибка авторизации';
-      }
+      } else if (e.message == 'The password is invalid or the user does not have a password.')
+        return 'Вы ввели неверный пароль. Попробуйте ещё раз';
       return e.message;
     } catch (e) {
       return e.toString();
@@ -104,13 +107,13 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      width: double.infinity,
+      width: MediaQuery.of(context).size.width,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding: EdgeInsets.only(top: 26),
+              padding: EdgeInsets.only(top: pad),
               child: Text(
                 'Добро пожаловать,\nвойдите в аккаунт',
                 textAlign: TextAlign.center,
@@ -128,6 +131,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     _passwordFocusNode.requestFocus();
                   },
                   textInputAction: TextInputAction.next,
+                  onTap: () {
+                    setState(() {
+                      pad = 26.0;
+                    });
+                  },
                 ),
                 CustomInput(
                   isPassword: true,
@@ -139,6 +147,11 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     _submitForm();
                   },
                   focusNode: _passwordFocusNode,
+                  onTap: () {
+                    setState(() {
+                      pad = 26.0;
+                    });
+                  },
                 ),
                 CustomBtn(
                   text: 'Войти',

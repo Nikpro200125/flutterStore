@@ -107,14 +107,20 @@ class _AddToCardState extends State<AddToCard> {
           Container(
             width: 44,
             child: TextField(
-              onChanged: (value) => setState(() {
-                if (value.isNotEmpty)
-                  counter = int.parse(value);
-                else {
-                  counter = 0;
-                  controller.text = '0';
-                }
-              }),
+              onChanged: (value) => setState(
+                () {
+                  if (value.isNotEmpty) counter = int.parse(value);
+                },
+              ),
+              onSubmitted: (value) => setState(
+                  () {
+                    if(value.isNotEmpty) counter = int.parse(value);
+                    else {
+                      counter = 0;
+                      controller.text = "0";
+                    }
+                  }
+              ),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,

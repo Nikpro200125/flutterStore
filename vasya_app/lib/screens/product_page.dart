@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
@@ -10,16 +9,12 @@ class ProductPage extends StatelessWidget {
   final String product;
   final String supplier;
   final String documentIdProduct;
-  final String documentIdSupplier;
-  final String documentIdCategory;
   final String productLogo;
   final int productPrice;
   final FirebaseService firebaseService = FirebaseService();
 
   ProductPage(
       {this.documentIdProduct,
-      this.documentIdSupplier,
-      this.documentIdCategory,
       this.product,
       this.productLogo,
       this.productPrice,
@@ -27,25 +22,19 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference doc = firebaseService.categoriesRef
-        .doc(documentIdCategory)
-        .collection('suppliers')
-        .doc(documentIdSupplier)
-        .collection('products')
-        .doc(documentIdProduct);
 
     return Scaffold(
       body: Container(
         child: Stack(
           children: [
             FutureBuilder(
-              future: doc.get(),
+              future: firebaseService.productsRef.doc(documentIdProduct).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(
                     body: Center(
                       child: Text(
-                        "Error ${snapshot.error}",
+                        "Ошибка ${snapshot.error}",
                       ),
                     ),
                   );
@@ -63,7 +52,7 @@ class ProductPage extends StatelessWidget {
                             children: [
                               Container(
                                 margin: EdgeInsets.only(
-                                  top: 63,
+                                  top: 78,
                                 ),
                                 height: 300,
                                 width: MediaQuery.of(context).size.width,
@@ -90,9 +79,11 @@ class ProductPage extends StatelessWidget {
                                     color: Colors.white,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Theme.of(context).accentColor.withOpacity(0.5),
-                                        spreadRadius: 2.0,
-                                        blurRadius: 5.0,
+                                        color: Theme.of(context)
+                                            .accentColor
+                                            .withOpacity(0.7),
+                                        spreadRadius: 3.0,
+                                        blurRadius: 8.0,
                                       ),
                                     ],
                                   ),
