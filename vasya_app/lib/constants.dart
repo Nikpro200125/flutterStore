@@ -18,4 +18,6 @@ class Constants {
     fontWeight: FontWeight.w600,
     color: Colors.black,
   );
+
+  static const currencySign = '₽';
 }

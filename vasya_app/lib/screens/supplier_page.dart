@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/product_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
@@ -9,15 +9,14 @@ class SupplierPage extends StatelessWidget {
   final String supplier;
   final String documentIdSupplier;
   final String documentIdCategory;
-  final CollectionReference categories =
-  FirebaseFirestore.instance.collection('categories');
+  final FirebaseService firebaseService = FirebaseService();
 
   SupplierPage(
       {this.supplier, this.documentIdSupplier, this.documentIdCategory});
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference doc = categories
+    DocumentReference doc = firebaseService.categoriesRef
         .doc(documentIdCategory)
         .collection('suppliers')
         .doc(documentIdSupplier);
@@ -78,8 +77,7 @@ class SupplierPage extends StatelessWidget {
                                     ),
                                     Center(
                                       child: Text(
-                                          "${snapshot2.data
-                                              .data()['description']}"),
+                                          "${snapshot2.data.data()['description']}"),
                                     ),
                                   ],
                                 ),
@@ -113,22 +111,21 @@ class SupplierPage extends StatelessWidget {
                       ),
                     Column(
                       children: snapshot.data.docs.map(
-                            (document) {
+                        (document) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProductPage(
-                                        product: document.data()['name'],
-                                        documentIdProduct: document.id,
-                                        documentIdCategory: documentIdCategory,
-                                        documentIdSupplier: documentIdSupplier,
-                                        productLogo: document.data()['logo'],
-                                        productPrice: document.data()['price'],
-                                        supplier : supplier,
-                                      ),
+                                  builder: (context) => ProductPage(
+                                    product: document.data()['name'],
+                                    documentIdProduct: document.id,
+                                    documentIdCategory: documentIdCategory,
+                                    documentIdSupplier: documentIdSupplier,
+                                    productLogo: document.data()['logo'],
+                                    productPrice: document.data()['price'],
+                                    supplier: supplier,
+                                  ),
                                 ),
                               );
                             },
@@ -182,7 +179,8 @@ class SupplierPage extends StatelessWidget {
                                           top: 55,
                                           child: Container(
                                             child: Text(
-                                              "${document.data()['price']}₽",
+                                              "${document.data()['price']}" +
+                                                  Constants.currencySign,
                                               style: TextStyle(
                                                 color: Color(0xFFED8C72),
                                                 fontSize: 18,

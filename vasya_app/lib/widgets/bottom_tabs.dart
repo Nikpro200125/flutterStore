@@ -26,9 +26,9 @@ class _BottomTabsState extends State<BottomTabs> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.07),
-              spreadRadius: 1.0,
-              blurRadius: 30.0,
+              color: Colors.black.withOpacity(0.25),
+              spreadRadius: 2.0,
+              blurRadius: 4.0,
             ),
           ],
         ),

@@ -1,15 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vasya_app/constants.dart';
-import 'package:vasya_app/tabs/cart_tab.dart';
+import 'package:vasya_app/firebase_service.dart';
 
 class CustomActionBar extends StatelessWidget {
   final String title;
   final bool hasBackArrow;
   final bool hasBackground;
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
-  final String user = FirebaseAuth.instance.currentUser.uid;
+  final FirebaseService firebaseService = FirebaseService();
+
   CustomActionBar({this.title, this.hasBackArrow, this.hasBackground});
 
   @override
@@ -19,6 +16,17 @@ class CustomActionBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: _hasBackground ? Colors.white : Colors.transparent,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(12.0),
+          bottomRight: Radius.circular(12.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            spreadRadius: 2.0,
+            blurRadius: 4.0,
+          ),
+        ],
       ),
       padding: EdgeInsets.only(
         top: 35,
@@ -32,6 +40,7 @@ class CustomActionBar extends StatelessWidget {
           if (_hasBackArrow)
             GestureDetector(
               onTap: () {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
                 Navigator.pop(context);
               },
               child: Container(
@@ -39,7 +48,7 @@ class CustomActionBar extends StatelessWidget {
                 height: 42,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Theme.of(context).accentColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Image(
@@ -52,11 +61,14 @@ class CustomActionBar extends StatelessWidget {
                 ),
               ),
             ),
-          if (title != null)
-            Text(
-              title,
-              style: Constants.boldHeading,
+          Text(
+            title ?? 'Title',
+            style: TextStyle(
+              fontSize: 22.0,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).accentColor,
             ),
+          ),
           GestureDetector(
             // onTap: () {
             //   Navigator.push(context, MaterialPageRoute(builder: (context) => CartTab()));
@@ -66,15 +78,17 @@ class CustomActionBar extends StatelessWidget {
                 height: 42,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Theme.of(context).accentColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: StreamBuilder(
-                  stream: users.doc(user).collection('cart').snapshots(),
+                  stream: firebaseService.usersRef
+                      .doc(FirebaseService().firebaseUser)
+                      .collection('cart')
+                      .snapshots(),
                   builder: (context, snapshot) {
                     int total = 0;
-                    if(snapshot.connectionState == ConnectionState
-                    .active)
+                    if (snapshot.connectionState == ConnectionState.active)
                       total = snapshot.data.docs.length;
                     return Text(
                       total.toString(),

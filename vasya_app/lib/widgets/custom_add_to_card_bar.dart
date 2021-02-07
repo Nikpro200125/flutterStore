@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/widgets/custom_btn.dart';
 
 class AddToCard extends StatefulWidget {
@@ -23,6 +24,7 @@ class AddToCard extends StatefulWidget {
 }
 
 class _AddToCardState extends State<AddToCard> {
+  final FirebaseService firebaseService = FirebaseService();
   int counter = 0;
   final controller = TextEditingController();
 
@@ -38,15 +40,11 @@ class _AddToCardState extends State<AddToCard> {
     super.dispose();
   }
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
   final SnackBar snackBar = SnackBar(
     content: Text('Продукт добавлен в корзину!'),
-    duration: Duration(milliseconds: 1500),
   );
   final SnackBar snackBarError = SnackBar(
     content: Text('Нужно выбрать хотя бы один товар...'),
-    animation: null,
-    duration: Duration(milliseconds: 1500),
   );
 
   @override
@@ -70,8 +68,8 @@ class _AddToCardState extends State<AddToCard> {
             outlineBtn: true,
             onPressed: () async {
               if (counter != 0) {
-                await users
-                    .doc(FirebaseAuth.instance.currentUser.uid)
+                await firebaseService.usersRef
+                    .doc(firebaseService.firebaseUser)
                     .collection('cart')
                     .doc(widget.documentIdProduct)
                     .set(

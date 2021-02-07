@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/supplier_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class CategoryPage extends StatelessWidget {
   final String category;
   final String documentIdCategory;
-  final CollectionReference products =
-      FirebaseFirestore.instance.collection('categories');
+  final FirebaseService firebaseService = FirebaseService();
 
   CategoryPage({this.category, this.documentIdCategory});
 
@@ -18,7 +18,7 @@ class CategoryPage extends StatelessWidget {
         child: Stack(
           children: [
             FutureBuilder<QuerySnapshot>(
-              future: products
+              future: firebaseService.categoriesRef
                   .doc(documentIdCategory)
                   .collection('suppliers')
                   .get(),

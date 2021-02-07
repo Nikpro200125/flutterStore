@@ -19,7 +19,7 @@ class Appl extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
          primaryColor: Color(0xFFEBDCB2),
-         accentColor: Color(0xFFEAF4425),
+         accentColor: Colors.deepOrange,
         scaffoldBackgroundColor: Colors.white,
       ),
       home: LandingPage(),

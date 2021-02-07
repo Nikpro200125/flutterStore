@@ -1,17 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class CartTab extends StatelessWidget {
-  final CollectionReference users =
-      FirebaseFirestore.instance.collection('users');
-  final String user = FirebaseAuth.instance.currentUser.uid;
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
-    var myProducts = users.doc(user).collection('cart');
+    var myProducts = firebaseService.usersRef
+        .doc(FirebaseService().firebaseUser)
+        .collection('cart');
     return Container(
       child: Stack(
         children: [
@@ -103,11 +103,12 @@ class CartTab extends StatelessWidget {
                                   left: 10,
                                 ),
                                 child: Text(
-                                  "Итого: ${document.data()['quantity']} × ${document.data()['price']}₽",
+                                  "Итого: ${document.data()['quantity']} × ${document.data()['price']}" +
+                                      Constants.currencySign,
                                   style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 18,
-                                    color: Colors.black,
+                                    color: Theme.of(context).accentColor,
                                   ),
                                   overflow: TextOverflow.fade,
                                   maxLines: 1,

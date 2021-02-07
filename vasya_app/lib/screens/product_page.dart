@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 import 'package:vasya_app/widgets/custom_add_to_card_bar.dart';
 
@@ -12,8 +14,7 @@ class ProductPage extends StatelessWidget {
   final String documentIdCategory;
   final String productLogo;
   final int productPrice;
-  final CollectionReference categories =
-      FirebaseFirestore.instance.collection('categories');
+  final FirebaseService firebaseService = FirebaseService();
 
   ProductPage(
       {this.documentIdProduct,
@@ -26,7 +27,7 @@ class ProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DocumentReference doc = categories
+    DocumentReference doc = firebaseService.categoriesRef
         .doc(documentIdCategory)
         .collection('suppliers')
         .doc(documentIdSupplier)
@@ -58,15 +59,50 @@ class ProductPage extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: 63,
-                            ),
-                            height: 300,
-                            child: Image.network(
-                              '${snapshot.data.data()['logo']}',
-                              fit: BoxFit.fill,
-                            ),
+                          Stack(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(
+                                  top: 63,
+                                ),
+                                height: 300,
+                                width: MediaQuery.of(context).size.width,
+                                child: Image.network(
+                                  '${snapshot.data.data()['logo']}',
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                              Positioned(
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    bottom: 12,
+                                    right: 12,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      snapshot.data.data()['price'].toString() +
+                                          Constants.currencySign,
+                                      style: Constants.regularHeading,
+                                    ),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).accentColor.withOpacity(0.5),
+                                        spreadRadius: 2.0,
+                                        blurRadius: 5.0,
+                                      ),
+                                    ],
+                                  ),
+                                  width: 100,
+                                  height: 40,
+                                ),
+                                bottom: 0,
+                                right: 0,
+                              ),
+                            ],
                           ),
                           Container(
                             decoration: BoxDecoration(

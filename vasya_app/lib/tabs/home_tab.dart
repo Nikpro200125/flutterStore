@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/category_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class HomeTab extends StatelessWidget {
-  final CollectionReference categories =
-      FirebaseFirestore.instance.collection('categories');
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class HomeTab extends StatelessWidget {
       child: Stack(
         children: [
           FutureBuilder<QuerySnapshot>(
-            future: categories.get(),
+            future: firebaseService.categoriesRef.get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
