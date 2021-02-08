@@ -30,8 +30,7 @@ class _SearchTabState extends State<SearchTab> {
           else
             FutureBuilder<QuerySnapshot>(
               future: firebaseService.productsRef
-                  .orderBy('search_string')
-                  .startAt([searchString]).endAt(["$searchString\uf8ff"]).get(),
+                  .where('search_string', arrayContains: searchString).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Scaffold(

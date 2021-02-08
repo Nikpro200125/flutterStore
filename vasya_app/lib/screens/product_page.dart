@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
@@ -6,23 +5,13 @@ import 'package:vasya_app/widgets/custom_action_bar.dart';
 import 'package:vasya_app/widgets/custom_add_to_card_bar.dart';
 
 class ProductPage extends StatelessWidget {
-  final String product;
-  final String supplier;
   final String documentIdProduct;
-  final String productLogo;
-  final int productPrice;
   final FirebaseService firebaseService = FirebaseService();
 
-  ProductPage(
-      {this.documentIdProduct,
-      this.product,
-      this.productLogo,
-      this.productPrice,
-      this.supplier});
+  ProductPage({this.documentIdProduct});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
         child: Stack(
@@ -41,112 +30,119 @@ class ProductPage extends StatelessWidget {
                 }
 
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return ListView(
-                    padding: EdgeInsets.only(
-                      bottom: 70,
-                    ),
+                  return Stack(
                     children: [
-                      Column(
+                      ListView(
+                        padding: EdgeInsets.only(
+                          bottom: 70,
+                        ),
                         children: [
-                          Stack(
+                          Column(
                             children: [
-                              Container(
-                                margin: EdgeInsets.only(
-                                  top: 78,
-                                ),
-                                height: 300,
-                                width: MediaQuery.of(context).size.width,
-                                child: Image.network(
-                                  '${snapshot.data.data()['logo']}',
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                              Positioned(
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 12,
-                                    right: 12,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      snapshot.data.data()['price'].toString() +
-                                          Constants.currencySign,
-                                      style: Constants.regularHeading,
+                              Stack(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      top: 78,
+                                    ),
+                                    height: 300,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Image.network(
+                                      '${snapshot.data.data()['logo']}',
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Theme.of(context)
-                                            .accentColor
-                                            .withOpacity(0.7),
-                                        spreadRadius: 3.0,
-                                        blurRadius: 8.0,
+                                  Positioned(
+                                    child: Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: 12,
+                                        right: 12,
                                       ),
-                                    ],
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 18,
+                                        vertical: 8,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          snapshot.data
+                                                  .data()['price']
+                                                  .toString() +
+                                              Constants.currencySign,
+                                          style: Constants.regularHeading,
+                                        ),
+                                      ),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Theme.of(context)
+                                                .accentColor
+                                                .withOpacity(0.8),
+                                            spreadRadius: 3.0,
+                                            blurRadius: 8.0,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    bottom: 0,
+                                    right: 0,
                                   ),
-                                  width: 100,
-                                  height: 40,
+                                ],
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                bottom: 0,
-                                right: 0,
+                                margin: EdgeInsets.all(12),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: 16,
+                                        top: 10,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Описание",
+                                          style: Constants.regularHeading,
+                                        ),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Text(
+                                          "${snapshot.data.data()['description']}"),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            margin: EdgeInsets.all(12),
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    bottom: 16,
-                                    top: 10,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Описание",
-                                      style: Constants.regularHeading,
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                      "${snapshot.data.data()['description']}"),
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
+                      ),
+                      CustomActionBar(
+                        hasBackArrow: true,
+                        title: snapshot.data.data()['name'],
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: AddToCard(
+                          supplier: snapshot.data.data()['supplier'],
+                          documentIdProduct: documentIdProduct,
+                          image: snapshot.data.data()['logo'],
+                          price: snapshot.data.data()['price'],
+                          product: snapshot.data.data()['name'],
+                        ),
                       ),
                     ],
                   );
                 }
-
                 return Scaffold(
                   body: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               },
-            ),
-            CustomActionBar(
-              hasBackArrow: true,
-              title: product,
-            ),
-            Positioned(
-              bottom: 0,
-              child: AddToCard(
-                supplier: supplier,
-                documentIdProduct: documentIdProduct,
-                image: productLogo,
-                price: productPrice,
-                product: product,
-              ),
             ),
           ],
         ),

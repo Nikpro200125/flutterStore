@@ -15,7 +15,7 @@ class LandingPage extends StatelessWidget {
         if (snapshot.hasError) {
           return Scaffold(
             body: Center(
-              child: Text('Error ${snapshot.error}'),
+              child: Text('Ошибка ${snapshot.error}'),
             ),
           );
         }
@@ -27,7 +27,7 @@ class LandingPage extends StatelessWidget {
               if (streamSnapshot.hasError) {
                 return Scaffold(
                   body: Center(
-                    child: Text('Error ${streamSnapshot.error}'),
+                    child: Text('Ошибка ${streamSnapshot.error}'),
                   ),
                 );
               }
