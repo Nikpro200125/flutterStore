@@ -5,14 +5,17 @@ class CustomActionBar extends StatelessWidget {
   final String title;
   final bool hasBackArrow;
   final bool hasBackground;
+  final bool hasCartCounter;
   final FirebaseService firebaseService = FirebaseService();
 
-  CustomActionBar({this.title, this.hasBackArrow, this.hasBackground});
+  CustomActionBar(
+      {this.title, this.hasBackArrow, this.hasBackground, this.hasCartCounter});
 
   @override
   Widget build(BuildContext context) {
     bool _hasBackArrow = hasBackArrow ?? false;
     bool _hasBackground = hasBackground ?? true;
+    bool _hasCartCounter = hasCartCounter ?? true;
     return Container(
       decoration: BoxDecoration(
         color: _hasBackground ? Colors.white : Colors.transparent,
@@ -61,46 +64,51 @@ class CustomActionBar extends StatelessWidget {
                 ),
               ),
             ),
-          Text(
-            title ?? 'Title',
-            style: TextStyle(
-              fontSize: 22.0,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).accentColor,
+          Container(
+            child: Text(
+              title ?? 'Title',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).accentColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          GestureDetector(
-            // onTap: () {
-            //   Navigator.push(context, MaterialPageRoute(builder: (context) => CartTab()));
-            // },
-            child: Container(
-                width: 42,
-                height: 42,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: StreamBuilder(
-                  stream: firebaseService.usersRef
-                      .doc(FirebaseService().firebaseUser)
-                      .collection('cart')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    int total = 0;
-                    if (snapshot.connectionState == ConnectionState.active)
-                      total = snapshot.data.docs.length;
-                    return Text(
-                      total.toString(),
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    );
-                  },
-                )),
-          ),
+          if (_hasCartCounter)
+            GestureDetector(
+              // onTap: () {
+              //   Navigator.push(context, MaterialPageRoute(builder: (context) => CartTab()));
+              // },
+              child: Container(
+                  width: 42,
+                  height: 42,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: StreamBuilder(
+                    stream: firebaseService.usersRef
+                        .doc(FirebaseService().firebaseUser)
+                        .collection('cart')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      int total = 0;
+                      if (snapshot.connectionState == ConnectionState.active)
+                        total = snapshot.data.docs.length;
+                      return Text(
+                        total.toString(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  )),
+            ),
         ],
       ),
     );

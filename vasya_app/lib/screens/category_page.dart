@@ -1,15 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/supplier_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
-class CategoryPage extends StatelessWidget {
+class CategoryPage extends StatefulWidget {
   final String category;
-  final FirebaseService firebaseService = FirebaseService();
 
   CategoryPage({this.category});
+
+  @override
+  _CategoryPageState createState() => _CategoryPageState();
+}
+
+class _CategoryPageState extends State<CategoryPage> {
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +25,13 @@ class CategoryPage extends StatelessWidget {
         children: [
           FutureBuilder<QuerySnapshot>(
             future: firebaseService.suppliersRef
-                .where('categories', arrayContains: category)
+                .where('categories', arrayContains: widget.category)
                 .get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
-                  body: Stack(
-                    children: [
-                      Center(
-                        child: Text('Ошибка ${snapshot.error}'),
-                      ),
-                      CustomActionBar(
-                        hasBackArrow: true,
-                        title: category,
-                      ),
-                    ],
+                  body: Center(
+                    child: Text('Ошибка ${snapshot.error}'),
                   ),
                 );
               }
@@ -57,7 +56,7 @@ class CategoryPage extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       SupplierPage(
-                                        category: category,
+                                        category: widget.category,
                                         supplierId: document.id,
                                       ),
                                 ),
@@ -135,6 +134,28 @@ class CategoryPage extends StatelessWidget {
                                       ),
                                     ],
                                   ),
+                                  if (FirebaseAuth.instance.currentUser.email ==
+                                      Constants.adminEmail)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          firebaseService.suppliersRef
+                                              .doc(document.id)
+                                              .delete();
+                                        });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          top: 8,
+                                          right: 8,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                        ),
+                                        alignment: Alignment.topRight,
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),
@@ -150,7 +171,7 @@ class CategoryPage extends StatelessWidget {
           ),
           CustomActionBar(
             hasBackArrow: true,
-            title: category,
+            title: widget.category,
           ),
         ],
       ),

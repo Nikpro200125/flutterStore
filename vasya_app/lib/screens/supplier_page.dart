@@ -1,22 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/product_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
-class SupplierPage extends StatelessWidget {
+class SupplierPage extends StatefulWidget {
   final String supplierId;
   final String category;
-  final FirebaseService firebaseService = FirebaseService();
 
   SupplierPage({this.supplierId, this.category});
+
+  @override
+  _SupplierPageState createState() => _SupplierPageState();
+}
+
+class _SupplierPageState extends State<SupplierPage> {
+  final FirebaseService firebaseService = FirebaseService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: firebaseService.suppliersRef.doc(supplierId).get(),
+        future: firebaseService.suppliersRef.doc(widget.supplierId).get(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Scaffold(
@@ -29,7 +36,7 @@ class SupplierPage extends StatelessWidget {
                   ),
                   CustomActionBar(
                     hasBackArrow: true,
-                    title: category,
+                    title: 'Ошибка',
                   ),
                 ],
               ),
@@ -88,7 +95,7 @@ class SupplierPage extends StatelessWidget {
                     ),
                     FutureBuilder<QuerySnapshot>(
                       future: firebaseService.productsRef
-                          .where('category', isEqualTo: category)
+                          .where('category', isEqualTo: widget.category)
                           .where('supplier',
                               isEqualTo: snapshot.data.data()['name'])
                           .get(),
@@ -134,11 +141,11 @@ class SupplierPage extends StatelessWidget {
                                       horizontal: 24,
                                       vertical: 12,
                                     ),
-                                    child: Row(
+                                    child: Stack(
                                       children: [
                                         Container(
                                           margin: EdgeInsets.only(
-                                            right: 12,
+                                            top: 24,
                                             left: 24,
                                           ),
                                           height: 100,
@@ -153,13 +160,14 @@ class SupplierPage extends StatelessWidget {
                                           ),
                                         ),
                                         Container(
+                                          margin: EdgeInsets.only(
+                                            top: 24,
+                                            left: 148,
+                                          ),
                                           height: 100,
                                           child: Stack(
                                             children: [
                                               Container(
-                                                margin: EdgeInsets.only(
-                                                  bottom: 25,
-                                                ),
                                                 child: Text(
                                                   "${document.data()['name']}",
                                                   maxLines: 2,
@@ -171,22 +179,46 @@ class SupplierPage extends StatelessWidget {
                                                 ),
                                                 width: 200,
                                               ),
-                                              Positioned(
-                                                top: 55,
-                                                child: Container(
-                                                  child: Text(
-                                                    "${document.data()['price']}" +
-                                                        Constants.currencySign,
-                                                    style: TextStyle(
-                                                      color: Color(0xFFED8C72),
-                                                      fontSize: 18,
-                                                    ),
+                                              Container(
+                                                margin: EdgeInsets.only(
+                                                  top: 60,
+                                                ),
+                                                child: Text(
+                                                  "${document.data()['price']}" +
+                                                      Constants.currencySign,
+                                                  style: TextStyle(
+                                                    color: Color(0xFFED8C72),
+                                                    fontSize: 18,
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
+                                        if (FirebaseAuth.instance
+                                            .currentUser.email ==
+                                            Constants.adminEmail)
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                firebaseService
+                                                    .productsRef
+                                                    .doc(document.id)
+                                                    .delete();
+                                              });
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.only(
+                                                top: 8,
+                                                right: 8,
+                                              ),
+                                              child: Icon(
+                                                Icons.close,
+                                                color: Colors.red,
+                                              ),
+                                              alignment: Alignment.topRight,
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -215,7 +247,7 @@ class SupplierPage extends StatelessWidget {
                 CircularProgressIndicator(),
                 CustomActionBar(
                   hasBackArrow: true,
-                  title: category,
+                  title: 'Загрузка...',
                 ),
               ],
             ),

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/screens/add_category.dart';
 import 'package:vasya_app/tabs/home_tab.dart';
 import 'package:vasya_app/tabs/cart_tab.dart';
 import 'package:vasya_app/tabs/search_tab.dart';
@@ -41,23 +42,23 @@ class _HomePageState extends State<HomePage> {
                     'Свой Базар\n',
                     style: Constants.regularHeading,
                   ),
-                  if(!FirebaseAuth.instance.currentUser.isAnonymous)
-                  Text(
-                    'Вы вошли с аккаунта',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
+                  if (!FirebaseAuth.instance.currentUser.isAnonymous)
+                    Text(
+                      'Вы вошли с аккаунта',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  if(!FirebaseAuth.instance.currentUser.isAnonymous)
-                  Text(
-                    '${FirebaseAuth.instance.currentUser.email}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: Colors.white,
+                  if (!FirebaseAuth.instance.currentUser.isAnonymous)
+                    Text(
+                      '${FirebaseAuth.instance.currentUser.email}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
                 ],
               ),
               decoration: BoxDecoration(
@@ -68,19 +69,22 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text('История заказов'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  //
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == 'lol@kek.itmo')
+            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
               ListTile(
                 title: Text('Добавить Категорию'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddCategory(),
+                    ),
+                  );
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == 'lol@kek.itmo')
+            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
               ListTile(
                 title: Text('Добавить Поставщика'),
                 onTap: () {
@@ -88,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                   // ...
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == 'lol@kek.itmo')
+            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
               ListTile(
                 title: Text('Добавить Товар'),
                 onTap: () {
@@ -96,18 +100,18 @@ class _HomePageState extends State<HomePage> {
                   // ...
                 },
               ),
-            if(!FirebaseAuth.instance.currentUser.isAnonymous)
-            ListTile(
-              title: Text(
-                'Выйти',
-                style: TextStyle(
-                  color: Colors.red,
+            if (!FirebaseAuth.instance.currentUser.isAnonymous)
+              ListTile(
+                title: Text(
+                  'Выйти',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
                 ),
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                },
               ),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-              },
-            ),
           ],
         ),
       ),

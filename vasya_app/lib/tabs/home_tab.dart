@@ -1,10 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/category_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
+  @override
+  _HomeTabState createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
   final FirebaseService firebaseService = FirebaseService();
 
   @override
@@ -53,7 +60,7 @@ class HomeTab extends StatelessWidget {
                         child: Stack(
                           children: [
                             Container(
-                              width: double.infinity,
+                              width: MediaQuery.of(context).size.width,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(12),
                                 child: ColorFiltered(
@@ -80,6 +87,28 @@ class HomeTab extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            if (FirebaseAuth.instance.currentUser.email ==
+                                Constants.adminEmail)
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    firebaseService.categoriesRef
+                                        .doc(document.id)
+                                        .delete();
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    right: 8,
+                                  ),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                  alignment: Alignment.topRight,
+                                ),
+                              ),
                           ],
                         ),
                       ),

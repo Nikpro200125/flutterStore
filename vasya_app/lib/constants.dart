@@ -20,4 +20,6 @@ class Constants {
   );
 
   static const currencySign = '₽';
+
+  static const adminEmail = 'lol@kek.itmo';
 }
