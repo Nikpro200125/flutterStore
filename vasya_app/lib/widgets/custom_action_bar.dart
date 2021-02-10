@@ -69,15 +69,17 @@ class CustomActionBar extends StatelessWidget {
               ),
             ),
           Container(
-            child: Text(
-              title ?? 'Title',
-              style: TextStyle(
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).accentColor,
+            child: Center(
+              child: Text(
+                title ?? 'Title',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).accentColor,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
           if (_hasCartCounter)
@@ -115,7 +117,7 @@ class CustomActionBar extends StatelessWidget {
             )
           else
             Container(
-              width: 42,
+              width: 20,
               height: 42,
             ),
         ],

@@ -102,7 +102,10 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                 CustomBtn(
                   text: 'Подтвердить',
                   outlineBtn: false,
-                  onPressed: () {
+                      onPressed: () {
+                    setState(() {
+                      _signInFormLoading = true;
+                    });
                     if (controller.text.length == 11) {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CodePage(controller.text)));
                     } else if(controller.text.isEmpty)ScaffoldMessenger.of(context).showSnackBar(
@@ -123,8 +126,12 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
             Padding(
               padding: EdgeInsets.only(bottom: 16.0),
               child: CustomBtn(
+                isLoading: _signInFormLoading,
                 text: 'Продолжить анонимно',
                 onPressed: () {
+                  setState(() {
+                    _signInFormLoading = true;
+                  });
                   FirebaseAuth.instance.signInAnonymously();
                 },
                 outlineBtn: true,

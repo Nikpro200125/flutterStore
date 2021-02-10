@@ -200,12 +200,42 @@ class _SupplierPageState extends State<SupplierPage> {
                                             Constants.adminPhone)
                                           GestureDetector(
                                             onTap: () {
-                                              setState(() {
-                                                firebaseService
-                                                    .productsRef
-                                                    .doc(document.id)
-                                                    .delete();
-                                              });
+                                              return showDialog(
+                                                context: context,
+                                                builder: (context) => AlertDialog(
+                                                  title: Text(
+                                                    'Подтвердить удаление',
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text(
+                                                        'Удалить',
+                                                        style: TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          firebaseService.productsRef
+                                                              .doc(document.id)
+                                                              .delete();
+                                                        });
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: Text(
+                                                        'Отмена',
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.pop(context),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
                                             },
                                             child: Container(
                                               padding: EdgeInsets.only(

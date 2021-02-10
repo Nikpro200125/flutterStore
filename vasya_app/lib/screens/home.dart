@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/screens/add_category.dart';
+import 'package:vasya_app/screens/add_supplier.dart';
 import 'package:vasya_app/screens/auth.dart';
 import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/tabs/home_tab.dart';
@@ -93,8 +94,12 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text('Добавить Поставщика'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddSupplier(),
+                    ),
+                  );
                 },
               ),
             if (FirebaseAuth.instance.currentUser.phoneNumber ==

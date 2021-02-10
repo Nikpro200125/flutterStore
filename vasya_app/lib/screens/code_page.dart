@@ -13,6 +13,7 @@ class CodePage extends StatefulWidget {
 }
 
 class _CodePageState extends State<CodePage> {
+  bool _signInFormLoading = false;
   String verificationId;
   TextEditingController controller = TextEditingController();
 
@@ -93,14 +94,22 @@ class _CodePageState extends State<CodePage> {
               ),
               Container(
                 child: CustomBtn(
+                  isLoading: _signInFormLoading,
                   text: 'Отправить',
                   onPressed: () {
-                    if (controller.text.length != 6)
+                    setState(() {
+                      _signInFormLoading = true;
+                    });
+                    if (controller.text.length != 6) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Введите корректный код'),
                         ),
                       );
+                      setState(() {
+                        _signInFormLoading = false;
+                      });
+                    }
                     else
                       signIn(controller.text);
                   },

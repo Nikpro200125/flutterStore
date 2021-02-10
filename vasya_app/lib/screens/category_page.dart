@@ -41,129 +41,155 @@ class _CategoryPageState extends State<CategoryPage> {
                   return Center(
                     child: Text("Нет таких поставщиков..."),
                   );
-                }
-                else
-                return ListView(
-                      padding: EdgeInsets.only(
-                        top: 90,
-                        bottom: 12,
-                      ),
-                      children: snapshot.data.docs.map(
-                            (document) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      SupplierPage(
-                                        category: widget.category,
-                                        supplierId: document.id,
-                                      ),
+                } else
+                  return ListView(
+                    padding: EdgeInsets.only(
+                      top: 90,
+                      bottom: 12,
+                    ),
+                    children: snapshot.data.docs.map(
+                      (document) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SupplierPage(
+                                  category: widget.category,
+                                  supplierId: document.id,
                                 ),
-                              );
-                            },
-                            child: Container(
-                              height: 108,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
                               ),
-                              margin: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: 150,
-                                    width: MediaQuery
-                                        .of(context)
-                                        .size
-                                        .width,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: ColorFiltered(
-                                        child: Image.network(
-                                          "${document.data()['logo']}",
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                        colorFilter: ColorFilter.mode(
-                                          Colors.black54,
-                                          BlendMode.darken,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.only(
-                                          top: 22,
-                                          bottom: 10,
-                                          left: 12,
-                                          right: 12,
-                                        ),
-                                        child: Center(
-                                          child: Container(
-                                            child: Text(
-                                              "${document.data()['name']}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 26,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 10,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            "Средняя цена:  ${document
-                                                .data()['averageprice']}" +
-                                                Constants.currencySign,
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white54,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                                      Constants.adminPhone)
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          firebaseService.suppliersRef
-                                              .doc(document.id)
-                                              .delete();
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.only(
-                                          top: 8,
-                                          right: 8,
-                                        ),
-                                        child: Icon(
-                                          Icons.close,
-                                          color: Colors.red,
-                                        ),
-                                        alignment: Alignment.topRight,
-                                      ),
-                                    ),
-                                ],
-                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 108,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                          );
-                        },
-                      ).toList(),
-                    );
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  height: 150,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: ColorFiltered(
+                                      child: Image.network(
+                                        "${document.data()['logo']}",
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                      colorFilter: ColorFilter.mode(
+                                        Colors.black54,
+                                        BlendMode.darken,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.only(
+                                        top: 22,
+                                        bottom: 10,
+                                        left: 12,
+                                        right: 12,
+                                      ),
+                                      child: Center(
+                                        child: Container(
+                                          child: Text(
+                                            "${document.data()['name']}",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 26,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Средняя цена:  ${document.data()['averageprice']}" +
+                                              Constants.currencySign,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white54,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (FirebaseAuth
+                                        .instance.currentUser.phoneNumber ==
+                                    Constants.adminPhone)
+                                  GestureDetector(
+                                    onTap: () {
+                                      return showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                            'Подтвердить удаление',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              child: Text(
+                                                'Удалить',
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  firebaseService.suppliersRef
+                                                      .doc(document.id)
+                                                      .delete();
+                                                });
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                'Отмена',
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.only(
+                                        top: 8,
+                                        right: 8,
+                                      ),
+                                      child: Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ),
+                                      alignment: Alignment.topRight,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                  );
               }
               return Center(
                 child: CircularProgressIndicator(),
