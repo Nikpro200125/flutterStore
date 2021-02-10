@@ -87,8 +87,8 @@ class _HomeTabState extends State<HomeTab> {
                                 ),
                               ),
                             ),
-                            if (FirebaseAuth.instance.currentUser.email ==
-                                Constants.adminEmail)
+                            if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                                Constants.adminPhone)
                               GestureDetector(
                                 onTap: () {
                                   setState(() {

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 
 class CustomActionBar extends StatelessWidget {
@@ -16,7 +18,9 @@ class CustomActionBar extends StatelessWidget {
     bool _hasBackArrow = hasBackArrow ?? false;
     bool _hasBackground = hasBackground ?? true;
     bool _hasCartCounter = hasCartCounter ?? true;
+    if (FirebaseAuth.instance.currentUser.isAnonymous) _hasCartCounter = false;
     return Container(
+      height: 90,
       decoration: BoxDecoration(
         color: _hasBackground ? Colors.white : Colors.transparent,
         borderRadius: BorderRadius.only(
@@ -108,6 +112,11 @@ class CustomActionBar extends StatelessWidget {
                       );
                     },
                   )),
+            )
+          else
+            Container(
+              width: 42,
+              height: 42,
             ),
         ],
       ),

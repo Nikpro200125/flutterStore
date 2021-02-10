@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
+import 'package:vasya_app/screens/auth.dart';
+import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 import 'package:vasya_app/widgets/custom_add_to_card_bar.dart';
+import 'package:vasya_app/widgets/custom_btn.dart';
 
 class ProductPage extends StatelessWidget {
   final String documentIdProduct;
@@ -151,16 +155,61 @@ class ProductPage extends StatelessWidget {
                           hasBackArrow: true,
                           title: snapshot.data.data()['name'],
                         ),
-                        Positioned(
-                          bottom: 0,
-                          child: AddToCard(
-                            supplier: snapshot.data.data()['supplier'],
-                            documentIdProduct: documentIdProduct,
-                            image: snapshot.data.data()['logo'],
-                            price: snapshot.data.data()['price'],
-                            product: snapshot.data.data()['name'],
+                        if (!FirebaseAuth.instance.currentUser.isAnonymous)
+                          Positioned(
+                            bottom: 0,
+                            child: AddToCard(
+                              supplier: snapshot.data.data()['supplier'],
+                              documentIdProduct: documentIdProduct,
+                              image: snapshot.data.data()['logo'],
+                              price: snapshot.data.data()['price'],
+                              product: snapshot.data.data()['name'],
+                            ),
+                          )
+                        else
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(12),
+                                  topRight: Radius.circular(12),
+                                ),
+                                color: Color(0xFFF4EADE),
+                              ),
+                              height: 70,
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      left: 10,
+                                    ),
+                                    child: Text(
+                                      'Чтобы добавить в корзину - войдите',
+                                      style: TextStyle(),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  CustomBtn(
+                                    text: 'Войти',
+                                    onPressed: () {
+                                      FirebaseAuth.instance.signOut();
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                LandingPage(),
+                                          ),
+                                          (route) => false);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     );
                 }

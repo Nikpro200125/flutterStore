@@ -107,19 +107,20 @@ class _SupplierPageState extends State<SupplierPage> {
                             ),
                           );
                         if (snapshot2.connectionState == ConnectionState.done)
+                          if (snapshot2.data.size == 0)
+                            return Center(
+                              child: Text(
+                                'У этого поставщика пока нет товаров...',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          else
                           return Column(
                             children: snapshot2.data.docs.map(
                               (document) {
-                                if (snapshot2.data.size == 0)
-                                  return Center(
-                                    child: Text(
-                                      'У этого поставщика пока нет товаров...',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  );
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -195,9 +196,8 @@ class _SupplierPageState extends State<SupplierPage> {
                                             ],
                                           ),
                                         ),
-                                        if (FirebaseAuth.instance
-                                            .currentUser.email ==
-                                            Constants.adminEmail)
+                                        if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                                            Constants.adminPhone)
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {

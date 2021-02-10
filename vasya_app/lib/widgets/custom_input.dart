@@ -38,12 +38,14 @@ class CustomInput extends StatelessWidget {
         onChanged: onChanged,
         onSubmitted: onSubmitted,
         decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: hintText ?? 'Hint text',
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 18.0,
-            )),
+          labelText: hintText ?? 'Hint text',
+          border: InputBorder.none,
+          hintText: hintText ?? 'Hint text',
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 24.0,
+            vertical: 18.0,
+          ),
+        ),
         style: Constants.regularDarkText,
       ),
     );

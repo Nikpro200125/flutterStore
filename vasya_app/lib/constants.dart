@@ -21,5 +21,5 @@ class Constants {
 
   static const currencySign = '₽';
 
-  static const adminEmail = 'lol@kek.itmo';
+  static const adminPhone = '+71111111111';
 }

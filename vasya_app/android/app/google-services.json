@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "716038275808-nqur4k59il8b0bmsv7iiqc07e3aui2j6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikita.vasya_app",
+            "certificate_hash": "e584dac05a0590e04da0e5e9645caee02e1ed575"
+          }
+        },
+        {
           "client_id": "716038275808-nvadc5953bkgbkbdm0iob5dfj01n10s1.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,6 +37,13 @@
             {
               "client_id": "716038275808-nvadc5953bkgbkbdm0iob5dfj01n10s1.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "716038275808-hv3lo178si0gs9u52jssjof8qvvejs0l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nikita.vasya-app"
+              }
             }
           ]
         }

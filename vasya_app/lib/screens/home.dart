@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/screens/add_category.dart';
+import 'package:vasya_app/screens/auth.dart';
+import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/tabs/home_tab.dart';
 import 'package:vasya_app/tabs/cart_tab.dart';
 import 'package:vasya_app/tabs/search_tab.dart';
@@ -52,11 +54,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   if (!FirebaseAuth.instance.currentUser.isAnonymous)
                     Text(
-                      '${FirebaseAuth.instance.currentUser.email}',
+                      '${FirebaseAuth.instance.currentUser.phoneNumber}',
                       style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 16,
                         color: Colors.white,
+                        letterSpacing: 5,
                       ),
                     ),
                 ],
@@ -72,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                   //
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
+            if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Категорию'),
                 onTap: () {
@@ -84,7 +88,8 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
+            if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Поставщика'),
                 onTap: () {
@@ -92,7 +97,8 @@ class _HomePageState extends State<HomePage> {
                   // ...
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.email == Constants.adminEmail)
+            if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Товар'),
                 onTap: () {
@@ -109,7 +115,29 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 onTap: () {
-                  FirebaseAuth.instance.signOut();
+                  try {
+                    FirebaseAuth.instance.signOut();
+                  } catch (e) {
+                    print(e.toString());
+                  }
+                },
+              ),
+            if (FirebaseAuth.instance.currentUser.isAnonymous)
+              ListTile(
+                title: Text(
+                  'Войти',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LandingPage(),
+                      ),
+                      (route) => false);
                 },
               ),
           ],

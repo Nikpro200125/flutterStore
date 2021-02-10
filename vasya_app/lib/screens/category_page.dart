@@ -42,6 +42,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     child: Text("Нет таких поставщиков..."),
                   );
                 }
+                else
                 return ListView(
                       padding: EdgeInsets.only(
                         top: 90,
@@ -134,8 +135,8 @@ class _CategoryPageState extends State<CategoryPage> {
                                       ),
                                     ],
                                   ),
-                                  if (FirebaseAuth.instance.currentUser.email ==
-                                      Constants.adminEmail)
+                                  if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                                      Constants.adminPhone)
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
