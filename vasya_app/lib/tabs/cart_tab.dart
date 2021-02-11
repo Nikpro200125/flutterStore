@@ -50,13 +50,11 @@ class _CartTabState extends State<CartTab> {
                     ),
                     children: snapshot.data.docs.map((document) {
                       return GestureDetector(
-                        onTap: () => setState(
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductPage(
-                                documentIdProduct: document.id,
-                              ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProductPage(
+                              documentIdProduct: document.id,
                             ),
                           ),
                         ),
@@ -166,7 +164,7 @@ class _CartTabState extends State<CartTab> {
                                             setState(() {
                                               firebaseService.usersRef
                                                   .doc(FirebaseAuth
-                                                  .instance.currentUser.uid)
+                                                      .instance.currentUser.uid)
                                                   .collection('cart')
                                                   .doc(document.id)
                                                   .delete();
@@ -227,10 +225,9 @@ class _CartTabState extends State<CartTab> {
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              LandingPage(),
+                          builder: (context) => LandingPage(),
                         ),
-                            (route) => false);
+                        (route) => false);
                   },
                 ),
               ],

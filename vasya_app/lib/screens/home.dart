@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/add_category.dart';
 import 'package:vasya_app/screens/add_supplier.dart';
 import 'package:vasya_app/screens/landing.dart';
@@ -10,6 +11,8 @@ import 'package:vasya_app/tabs/search_tab.dart';
 import 'package:vasya_app/widgets/bottom_tabs.dart';
 
 class HomePage extends StatefulWidget {
+  final FirebaseService firebaseService = FirebaseService();
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -93,12 +96,7 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 title: Text('Добавить Поставщика'),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddSupplier(),
-                    ),
-                  );
+                  load();
                 },
               ),
             if (FirebaseAuth.instance.currentUser.phoneNumber ==
@@ -183,5 +181,20 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void load() {
+    widget.firebaseService.categoriesRef.get().then(
+          (value) => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddSupplier(
+                Map.fromIterable(
+                    value.docs.map((e) => e.data()['name']).toList(),
+                    value: (value) => false),
+              ),
+            ),
+          ),
+        );
   }
 }

@@ -1,13 +1,16 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 import 'package:vasya_app/widgets/custom_btn.dart';
 
 class AddCategory extends StatefulWidget {
+  final FirebaseService firebaseService = FirebaseService();
+
   @override
   _AddCategoryState createState() => _AddCategoryState();
 }
@@ -17,6 +20,7 @@ class _AddCategoryState extends State<AddCategory> {
   String imageUrl;
   final picker = ImagePicker();
   final nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -42,6 +46,8 @@ class _AddCategoryState extends State<AddCategory> {
               top: 100,
             ),
             child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               child: ListView(
                 children: [
                   TextFormField(
@@ -98,28 +104,37 @@ class _AddCategoryState extends State<AddCategory> {
       if (pickedFile != null) {
         image = File(pickedFile.path);
       } else {
-        print('No image selected.');
+        print('Изображение не выбрано');
       }
     });
   }
 
   Future save() async {
-    if (image == null)
+    if (_formKey.currentState.validate()) if (image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
       );
-    else {
+    } else {
       Reference firebaseStorage = FirebaseStorage.instance.ref().child(
             'images/${image.path.split('/').last}',
           );
-      await firebaseStorage.putFile(image).whenComplete(
+      await firebaseStorage
+          .putFile(image)
+          .catchError(
+            (e) => ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Ошибка'),
+              ),
+            ),
+          )
+          .whenComplete(
             () => {
               firebaseStorage.getDownloadURL().then(
                 (value) {
                   imageUrl = value;
-                  FirebaseFirestore.instance.collection('categories').add(
+                  widget.firebaseService.categoriesRef.add(
                     {
                       'name': nameController.text,
                       'logo': imageUrl,

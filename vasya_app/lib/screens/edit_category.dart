@@ -11,7 +11,7 @@ import 'package:vasya_app/widgets/custom_btn.dart';
 
 class EditCategory extends StatefulWidget {
   final String docId;
-  final CollectionReference firebaseService = FirebaseService().categoriesRef;
+  final FirebaseService firebaseService = FirebaseService();
 
   EditCategory({this.docId});
 
@@ -24,6 +24,7 @@ class _EditCategoryState extends State<EditCategory> {
   File image;
   final picker = ImagePicker();
   String imageUrl;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,8 @@ class _EditCategoryState extends State<EditCategory> {
               right: 12,
             ),
             child: FutureBuilder(
-              future: widget.firebaseService.doc(widget.docId).get(),
+              future:
+                  widget.firebaseService.categoriesRef.doc(widget.docId).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError)
                   return Center(
@@ -50,65 +52,69 @@ class _EditCategoryState extends State<EditCategory> {
                   imageUrl = snapshot.data.data()['logo'];
                   return Stack(
                     children: [
-                      Column(
-                        children: [
-                          TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return 'Введите название';
-                              }
-                              return null;
-                            },
-                            controller: controllerName,
-                            maxLength: 100,
-                          ),
-                          if (image == null)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: imageUrl == null
-                                    ? Text('изображение отсутствует')
-                                    : Image.network(
-                                        imageUrl,
-                                        height: 150,
-                                        width: 300,
-                                      ),
-                              ),
-                            )
-                          else
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: image == null
-                                    ? Text('изображение отсутствует')
-                                    : Image.file(
-                                        image,
-                                        height: 150,
-                                        width: 300,
-                                      ),
-                              ),
-                            ),
-                          CustomBtn(
-                            onPressed: getImage,
-                            text: 'заменить изображение',
-                            outlineBtn: true,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 16.0),
-                            child: CustomBtn(
-                              onPressed: () {
-                                save();
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Введите название';
+                                }
+                                return null;
                               },
-                              text: 'Сохранить',
+                              controller: controllerName,
+                              maxLength: 100,
                             ),
-                          ),
-                        ],
+                            if (image == null)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: imageUrl == null
+                                      ? Text('изображение отсутствует')
+                                      : Image.network(
+                                          imageUrl,
+                                          height: 150,
+                                          width: 300,
+                                        ),
+                                ),
+                              )
+                            else
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: image == null
+                                      ? Text('изображение отсутствует')
+                                      : Image.file(
+                                          image,
+                                          height: 150,
+                                          width: 300,
+                                        ),
+                                ),
+                              ),
+                            CustomBtn(
+                              onPressed: getImage,
+                              text: 'заменить изображение',
+                              outlineBtn: true,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              child: CustomBtn(
+                                onPressed: () {
+                                  save();
+                                },
+                                text: 'Сохранить',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
                         child: CustomBtn(
                           onPressed: () async {
-                            await widget.firebaseService
+                            await widget.firebaseService.categoriesRef
                                 .doc(widget.docId)
                                 .delete()
                                 .whenComplete(
@@ -171,31 +177,53 @@ class _EditCategoryState extends State<EditCategory> {
   }
 
   Future save() async {
-    if (image == null) {
-      widget.firebaseService.doc(widget.docId).set(
-        {
-          'name': controllerName.text,
-        },
-      );
-    } else {
-      Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-            'images/${image.path.split('/').last}',
-          );
-      await firebaseStorage.putFile(image).whenComplete(
-            () => {
-              firebaseStorage.getDownloadURL().then(
-                (value) {
-                  imageUrl = value;
-                  widget.firebaseService.doc(widget.docId).set(
-                    {
-                      'name': controllerName.text,
-                      'logo': imageUrl,
-                    },
-                  );
-                },
-              )
-            },
-          );
+    if (_formKey.currentState.validate()) {
+      if (image == null) {
+        widget.firebaseService.categoriesRef.doc(widget.docId).update(
+          {
+            'name': controllerName.text,
+          },
+        ).catchError(
+              (e) =>
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Ошибка'),
+                ),
+              ),
+        );
+      } else {
+        Reference firebaseStorage = FirebaseStorage.instance.ref().child(
+          'images/${image.path
+              .split('/')
+              .last}',
+        );
+        await firebaseStorage
+            .putFile(image)
+            .catchError(
+              (e) =>
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Ошибка'),
+                ),
+              ),
+        )
+            .whenComplete(
+              () =>
+          {
+            firebaseStorage.getDownloadURL().then(
+                  (value) {
+                imageUrl = value;
+                widget.firebaseService.categoriesRef.doc(widget.docId).update(
+                  {
+                    'name': controllerName.text,
+                    'logo': imageUrl,
+                  },
+                );
+              },
+            )
+          },
+        );
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Категория изменена'),
@@ -206,7 +234,7 @@ class _EditCategoryState extends State<EditCategory> {
         MaterialPageRoute(
           builder: (context) => LandingPage(),
         ),
-        (route) => false,
+            (route) => false,
       );
     }
   }
