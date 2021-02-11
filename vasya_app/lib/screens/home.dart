@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/screens/add_category.dart';
 import 'package:vasya_app/screens/add_supplier.dart';
-import 'package:vasya_app/screens/auth.dart';
 import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/tabs/home_tab.dart';
 import 'package:vasya_app/tabs/cart_tab.dart';

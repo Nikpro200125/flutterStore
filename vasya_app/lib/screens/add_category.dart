@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
+import 'package:vasya_app/widgets/custom_btn.dart';
 
 class AddCategory extends StatefulWidget {
   @override
@@ -53,6 +55,7 @@ class _AddCategoryState extends State<AddCategory> {
                       }
                       return null;
                     },
+                    maxLength: 100,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -66,20 +69,18 @@ class _AddCategoryState extends State<AddCategory> {
                             ),
                     ),
                   ),
-                  RaisedButton(
+                  CustomBtn(
                     onPressed: getImage,
-                    child: Text(
-                      'выбрать изображение',
-                    ),
-                    color: Theme.of(context).accentColor,
+                    text: 'выбрать изображение',
+                    outlineBtn: true,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
+                    child: CustomBtn(
                       onPressed: () {
                         save();
                       },
-                      child: Text('Сохранить'),
+                      text: 'Сохранить',
                     ),
                   ),
                 ],
@@ -103,28 +104,43 @@ class _AddCategoryState extends State<AddCategory> {
   }
 
   Future save() async {
-    Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-          'images/${image.path.split('/').last}',
-        );
-    await firebaseStorage.putFile(image).whenComplete(
-          () => {
-            firebaseStorage.getDownloadURL().then(
-              (value) {
-                imageUrl = value;
-                FirebaseFirestore.instance.collection('categories').add(
-                  {
-                    'name': nameController.text,
-                    'logo': imageUrl,
-                  },
-                );
-              },
-            )
-          },
-        );
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Категория добавлена'),
-      ),
-    );
+    if (image == null)
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Изображение не выбрано'),
+        ),
+      );
+    else {
+      Reference firebaseStorage = FirebaseStorage.instance.ref().child(
+            'images/${image.path.split('/').last}',
+          );
+      await firebaseStorage.putFile(image).whenComplete(
+            () => {
+              firebaseStorage.getDownloadURL().then(
+                (value) {
+                  imageUrl = value;
+                  FirebaseFirestore.instance.collection('categories').add(
+                    {
+                      'name': nameController.text,
+                      'logo': imageUrl,
+                    },
+                  );
+                },
+              )
+            },
+          );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Категория добавлена'),
+        ),
+      );
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LandingPage(),
+        ),
+        (route) => false,
+      );
+    }
   }
 }

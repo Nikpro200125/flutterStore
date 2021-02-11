@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/category_page.dart';
+import 'package:vasya_app/screens/edit_category.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class HomeTab extends StatefulWidget {
@@ -38,6 +39,17 @@ class _HomeTabState extends State<HomeTab> {
                   ),
                   children: snapshot.data.docs.map((document) {
                     return GestureDetector(
+                      onLongPress: () {
+                        if (FirebaseAuth.instance.currentUser.phoneNumber ==
+                            Constants.adminPhone)
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditCategory(docId: document.id),
+                            ),
+                          );
+                      },
                       onTap: () {
                         Navigator.push(
                           context,

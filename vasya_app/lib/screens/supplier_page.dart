@@ -50,7 +50,7 @@ class _SupplierPageState extends State<SupplierPage> {
                   children: [
                     Container(
                       margin: EdgeInsets.only(
-                        top: 55,
+                        top: 50,
                       ),
                       height: 300,
                       width: MediaQuery.of(context).size.width,

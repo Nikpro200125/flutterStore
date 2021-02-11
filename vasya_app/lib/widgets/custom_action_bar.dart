@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 
 class CustomActionBar extends StatelessWidget {
@@ -36,13 +36,11 @@ class CustomActionBar extends StatelessWidget {
         ],
       ),
       padding: EdgeInsets.only(
-        top: 35,
-        left: 24,
-        right: 24,
-        bottom: 10,
+        top: 30,
+        left: 10,
+        right: 10,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
           if (_hasBackArrow)
             GestureDetector(
@@ -51,34 +49,42 @@ class CustomActionBar extends StatelessWidget {
                 Navigator.pop(context);
               },
               child: Container(
-                width: 42,
-                height: 42,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Image(
-                  color: Colors.white,
-                  height: 16,
-                  width: 16,
-                  image: AssetImage(
-                    "assets/images/back_arrow.png",
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 42,
+                  height: 42,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Image(
+                    color: Colors.white,
+                    height: 16,
+                    width: 16,
+                    image: AssetImage(
+                      "assets/images/back_arrow.png",
+                    ),
                   ),
                 ),
               ),
             ),
           Container(
-            child: Center(
-              child: Text(
-                title ?? 'Title',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).accentColor,
+            height: 90,
+            alignment: Alignment.center,
+            child: Container(
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(
+                  title ?? 'Title',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).accentColor,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
@@ -88,6 +94,8 @@ class CustomActionBar extends StatelessWidget {
               //   Navigator.push(context, MaterialPageRoute(builder: (context) => CartTab()));
               // },
               child: Container(
+                alignment: Alignment.centerRight,
+                child: Container(
                   width: 42,
                   height: 42,
                   alignment: Alignment.center,
@@ -113,12 +121,9 @@ class CustomActionBar extends StatelessWidget {
                         ),
                       );
                     },
-                  )),
-            )
-          else
-            Container(
-              width: 20,
-              height: 42,
+                  ),
+                ),
+              ),
             ),
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/widgets/custom_btn.dart';
 
 class CodePage extends StatefulWidget {
