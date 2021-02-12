@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,8 +37,7 @@ class _EditCategoryState extends State<EditCategory> {
               right: 12,
             ),
             child: FutureBuilder(
-              future:
-                  widget.firebaseService.categoriesRef.doc(widget.docId).get(),
+              future: widget.firebaseService.categoriesRef.doc(widget.docId).get(),
               builder: (context, snapshot) {
                 if (snapshot.hasError)
                   return Center(
@@ -47,8 +45,7 @@ class _EditCategoryState extends State<EditCategory> {
                   );
 
                 if (snapshot.connectionState == ConnectionState.done) {
-                  controllerName =
-                      TextEditingController(text: snapshot.data.data()['name']);
+                  controllerName = TextEditingController(text: snapshot.data.data()['name']);
                   imageUrl = snapshot.data.data()['logo'];
                   return Stack(
                     children: [
@@ -99,8 +96,7 @@ class _EditCategoryState extends State<EditCategory> {
                               outlineBtn: true,
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
                               child: CustomBtn(
                                 onPressed: () {
                                   save();
@@ -114,9 +110,24 @@ class _EditCategoryState extends State<EditCategory> {
                       Container(
                         child: CustomBtn(
                           onPressed: () async {
+                            FirebaseStorage.instance.refFromURL(snapshot.data.data()['logo']).delete().catchError(
+                                  (e) => ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Ошибка'),
+                                    ),
+                                  ),
+                                );
+                            ;
                             await widget.firebaseService.categoriesRef
                                 .doc(widget.docId)
                                 .delete()
+                                .catchError(
+                                  (e) => ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Ошибка'),
+                                    ),
+                                  ),
+                                )
                                 .whenComplete(
                               () {
                                 Navigator.pushAndRemoveUntil(
@@ -184,45 +195,40 @@ class _EditCategoryState extends State<EditCategory> {
             'name': controllerName.text,
           },
         ).catchError(
-              (e) =>
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Ошибка'),
-                ),
-              ),
+          (e) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка'),
+            ),
+          ),
         );
       } else {
         Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-          'images/${image.path
-              .split('/')
-              .last}',
-        );
+              'images/categories/${image.path.split('/').last}',
+            );
         await firebaseStorage
             .putFile(image)
             .catchError(
-              (e) =>
-              ScaffoldMessenger.of(context).showSnackBar(
+              (e) => ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Ошибка'),
                 ),
               ),
-        )
-            .whenComplete(
-              () =>
-          {
-            firebaseStorage.getDownloadURL().then(
-                  (value) {
-                imageUrl = value;
-                widget.firebaseService.categoriesRef.doc(widget.docId).update(
-                  {
-                    'name': controllerName.text,
-                    'logo': imageUrl,
-                  },
-                );
-              },
             )
-          },
-        );
+            .whenComplete(
+              () => {
+                firebaseStorage.getDownloadURL().then(
+                  (value) {
+                    imageUrl = value;
+                    widget.firebaseService.categoriesRef.doc(widget.docId).update(
+                      {
+                        'name': controllerName.text,
+                        'logo': imageUrl,
+                      },
+                    );
+                  },
+                )
+              },
+            );
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -234,7 +240,7 @@ class _EditCategoryState extends State<EditCategory> {
         MaterialPageRoute(
           builder: (context) => LandingPage(),
         ),
-            (route) => false,
+        (route) => false,
       );
     }
   }

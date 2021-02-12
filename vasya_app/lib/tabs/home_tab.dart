@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
@@ -40,13 +41,11 @@ class _HomeTabState extends State<HomeTab> {
                   children: snapshot.data.docs.map((document) {
                     return GestureDetector(
                       onLongPress: () {
-                        if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                            Constants.adminPhone)
+                        if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  EditCategory(docId: document.id),
+                              builder: (context) => EditCategory(docId: document.id),
                             ),
                           );
                       },
@@ -99,8 +98,7 @@ class _HomeTabState extends State<HomeTab> {
                                 ),
                               ),
                             ),
-                            if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                                Constants.adminPhone)
+                            if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
                               GestureDetector(
                                 onTap: () {
                                   return showDialog(
@@ -121,10 +119,9 @@ class _HomeTabState extends State<HomeTab> {
                                             ),
                                           ),
                                           onPressed: () {
+                                            FirebaseStorage.instance.refFromURL(document.data()['logo']).delete();
                                             setState(() {
-                                              firebaseService.categoriesRef
-                                                  .doc(document.id)
-                                                  .delete();
+                                              firebaseService.categoriesRef.doc(document.id).delete();
                                             });
                                             Navigator.pop(context);
                                           },
@@ -133,8 +130,7 @@ class _HomeTabState extends State<HomeTab> {
                                           child: Text(
                                             'Отмена',
                                           ),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
+                                          onPressed: () => Navigator.pop(context),
                                         ),
                                       ],
                                     ),

@@ -27,7 +27,6 @@ class _AddSupplierState extends State<AddSupplier> {
   final priceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String dropDown;
-  bool loading = false;
 
   @override
   void dispose() {
@@ -114,12 +113,17 @@ class _AddSupplierState extends State<AddSupplier> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: image == null
-                          ? Text('изображение не выбрано')
+                          ? Text(
+                        'изображение не выбрано',
+                        style: TextStyle(
+                          color: Colors.red,
+                        ),
+                      )
                           : Image.file(
-                              image,
-                              height: 150,
-                              width: 300,
-                            ),
+                        image,
+                        height: 150,
+                        width: 300,
+                      ),
                     ),
                   ),
                   Padding(
@@ -133,18 +137,31 @@ class _AddSupplierState extends State<AddSupplier> {
                       ),
                     ),
                   ),
-                  Column(
-                    children: widget.l.keys.map((String key) {
-                      return CheckboxListTile(
-                        title: Text(key),
-                        value: widget.l[key],
-                        onChanged: (bool value) {
-                          setState(() {
-                            widget.l[key] = value;
-                          });
-                        },
-                      );
-                    }).toList(),
+                  FormField(
+                    validator: (value) {
+                      if (!widget.l.values.contains(true)) {
+                        return "error";
+                      }
+                      return null;
+                    },
+                    builder: (context) =>
+                        Column(
+                          children: widget.l.keys.map(
+                                (String key) {
+                              return CheckboxListTile(
+                                title: Text(key),
+                                value: widget.l[key],
+                                onChanged: (bool value) {
+                                  setState(
+                                        () {
+                                      widget.l[key] = value;
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ).toList(),
+                        ),
                   ),
                   CustomBtn(
                     onPressed: getImage,
@@ -167,9 +184,6 @@ class _AddSupplierState extends State<AddSupplier> {
         ],
       ),
     );
-    return Center(
-      child: CircularProgressIndicator(),
-    );
   }
 
   Future getImage() async {
@@ -184,56 +198,65 @@ class _AddSupplierState extends State<AddSupplier> {
   }
 
   Future save() async {
+    Map<String, bool> x = {...widget.l};
+    x.removeWhere((key, value) => !value);
     if (_formKey.currentState.validate()) if (image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
       );
-      setState(() {
-        loading = false;
-      });
+    } else if (double.tryParse(priceController.text) == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Некорректная средняя цена'),
+        ),
+      );
     } else {
       Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-            'images/${image.path.split('/').last}',
-          );
+        'images/${image.path
+            .split('/')
+            .last}',
+      );
       await firebaseStorage
           .putFile(image)
           .catchError(
-            (e) => ScaffoldMessenger.of(context).showSnackBar(
+            (e) =>
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Ошибка'),
               ),
             ),
-          )
+      )
           .whenComplete(
-            () => {
-              firebaseStorage.getDownloadURL().then(
+            () {
+          firebaseStorage.getDownloadURL().then(
                 (value) {
-                  imageUrl = value;
-                  widget.firebaseService.categoriesRef.add(
-                    {
-                      'name': nameController.text,
-                      'logo': imageUrl,
-                      'description': descriptionController.text,
-                      'price': int.parse(priceController.text),
-                    },
-                  );
+              imageUrl = value;
+              widget.firebaseService.suppliersRef.add(
+                {
+                  'name': nameController.text,
+                  'logo': imageUrl,
+                  'description': descriptionController.text,
+                  'averageprice': double.parse(priceController.text),
+                  'categories': x.keys.toList(),
                 },
-              )
+              );
             },
           );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Поставщик добавлен'),
-        ),
-      );
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LandingPage(),
-        ),
-        (route) => false,
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Поставщик добавлен'),
+            ),
+          );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => LandingPage(),
+            ),
+                (route) => false,
+          );
+        },
       );
     }
   }

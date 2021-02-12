@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +119,7 @@ class _AddCategoryState extends State<AddCategory> {
       );
     } else {
       Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-            'images/${image.path.split('/').last}',
+            'images/categories/${image.path.split('/').last}',
           );
       await firebaseStorage
           .putFile(image)
