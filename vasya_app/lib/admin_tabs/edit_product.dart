@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:vasya_app/firebase_service.dart';
-import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 import 'package:vasya_app/widgets/custom_btn.dart';
 
@@ -240,56 +239,73 @@ class _EditProductState extends State<EditProduct> {
   }
 
   Future save() async {
-    if (_formKey.currentState.validate()) if (double.tryParse(priceController.text) == null)
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Некорректная цена'),
-        ),
-      );
-    else if (image == null) {
-      widget.firebaseService.productsRef.doc(widget.docId).update(
-        {
-          'name': nameController.text,
-          'description': descriptionController.text,
-          'price': double.parse(priceController.text),
-          'category': category,
-          'supplier': supplier,
-        },
-      );
-    } else {
-      Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-            'images/products/${image.path.split('/').last}',
-          );
-      await firebaseStorage
-          .putFile(image)
-          .catchError((e) => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Ошибка'),
-                ),
-              ))
-          .whenComplete(() {
-        firebaseStorage.getDownloadURL().then(
-          (value) {
-            imageUrl = value;
-            widget.firebaseService.productsRef.doc(widget.docId).update(
-              {
-                'name': nameController.text,
-                'logo': imageUrl,
-                'description': descriptionController.text,
-                'price': double.parse(priceController.text),
-                'category': category,
-                'supplier': supplier,
-              },
-            );
+    getSearchString(nameController.text);
+    if (_formKey.currentState.validate()) {
+      if (double.tryParse(priceController.text) == null)
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Некорректная цена'),
+          ),
+        );
+      else if (image == null) {
+        widget.firebaseService.productsRef.doc(widget.docId).update(
+          {
+            'name': nameController.text,
+            'description': descriptionController.text,
+            'price': double.parse(priceController.text),
+            'category': category,
+            'supplier': supplier,
+            'search_string': getSearchString(nameController.text),
           },
         );
-      });
+      } else {
+        Reference firebaseStorage = FirebaseStorage.instance.ref().child(
+              'images/products/${image.path.split('/').last}',
+            );
+        await firebaseStorage
+            .putFile(image)
+            .catchError((e) => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Ошибка'),
+                  ),
+                ))
+            .whenComplete(() {
+          firebaseStorage.getDownloadURL().then(
+            (value) {
+              imageUrl = value;
+              widget.firebaseService.productsRef.doc(widget.docId).update(
+                {
+                  'name': nameController.text,
+                  'logo': imageUrl,
+                  'description': descriptionController.text,
+                  'price': double.parse(priceController.text),
+                  'category': category,
+                  'supplier': supplier,
+                  'search_string': getSearchString(nameController.text),
+                },
+              );
+            },
+          );
+        });
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Товар обновлен'),
+        ),
+      );
+      Navigator.pop(context);
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Товар обновлен'),
-      ),
-    );
-    Navigator.pop(context);
+  }
+
+  List<String> getSearchString(String name) {
+    List<String> x = [];
+    name.split(' ').forEach((element) {
+      String temp = "";
+      for (int i = 0; i < element.length; i++) {
+        temp += element[i];
+        x.add(temp);
+      }
+    });
+    return x;
   }
 }

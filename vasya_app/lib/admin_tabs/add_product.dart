@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -254,6 +255,7 @@ class _AddProductState extends State<AddProduct> {
                   'price': double.parse(priceController.text),
                   'category': category,
                   'supplier': supplier,
+                  'search_string': getSearchString(nameController.text),
                 },
               );
             },
@@ -273,5 +275,16 @@ class _AddProductState extends State<AddProduct> {
         },
       );
     }
+  }
+  List<String> getSearchString(String name){
+    List<String> x = [];
+    name.split(' ').forEach((element){
+      String temp = "";
+      for (int i = 0; i < element.length; i++) {
+        temp += element[i];
+        x.add(temp);
+      }
+    });
+    return x;
   }
 }

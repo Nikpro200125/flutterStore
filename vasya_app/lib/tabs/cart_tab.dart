@@ -59,6 +59,7 @@ class _CartTabState extends State<CartTab> {
                           ),
                         ),
                         child: Container(
+                          width: MediaQuery.of(context).size.width,
                           height: 120,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
@@ -69,6 +70,7 @@ class _CartTabState extends State<CartTab> {
                             vertical: 12,
                           ),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
                                 margin: EdgeInsets.symmetric(
@@ -86,12 +88,11 @@ class _CartTabState extends State<CartTab> {
                                 ),
                               ),
                               Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 200,
                                     margin: EdgeInsets.only(
                                       top: 20,
-                                      left: 10,
                                     ),
                                     child: Text(
                                       "${document.data()['product']}",
@@ -105,10 +106,8 @@ class _CartTabState extends State<CartTab> {
                                     ),
                                   ),
                                   Container(
-                                    width: 200,
                                     margin: EdgeInsets.only(
                                       top: 10,
-                                      left: 10,
                                     ),
                                     child: Text(
                                       "${document.data()['supplier']}",
@@ -122,10 +121,8 @@ class _CartTabState extends State<CartTab> {
                                     ),
                                   ),
                                   Container(
-                                    width: 200,
                                     margin: EdgeInsets.only(
                                       top: 10,
-                                      left: 10,
                                     ),
                                     child: Text(
                                       "Итого: ${document.data()['quantity']} × ${document.data()['price']}" +
@@ -192,7 +189,7 @@ class _CartTabState extends State<CartTab> {
                                     Icons.close,
                                     color: Colors.red,
                                   ),
-                                  alignment: Alignment.topCenter,
+                                  alignment: Alignment.topRight,
                                 ),
                               ),
                             ],

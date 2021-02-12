@@ -122,6 +122,9 @@ class _SupplierPageState extends State<SupplierPage> {
                             children: snapshot2.data.docs.map(
                               (document) {
                                 return GestureDetector(
+                                  onLongPress: () {
+                                    if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone) load(document.id);
+                                  },
                                   onTap: () {
                                     Navigator.push(
                                       context,
@@ -196,9 +199,6 @@ class _SupplierPageState extends State<SupplierPage> {
                                         ),
                                         if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
                                           GestureDetector(
-                                            onLongPress: () {
-                                              if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone) load(document.id);
-                                            },
                                             onTap: () {
                                               return showDialog(
                                                 context: context,
@@ -290,7 +290,7 @@ class _SupplierPageState extends State<SupplierPage> {
   void load(String docId) {
     widget.firebaseService.categoriesRef.get().then(
           (value) => widget.firebaseService.suppliersRef.get().then(
-                (value2) => widget.firebaseService.suppliersRef.doc(docId).get().then(
+                (value2) => widget.firebaseService.productsRef.doc(docId).get().then(
                       (value3) => Navigator.push(
                         context,
                         MaterialPageRoute(
