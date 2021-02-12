@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/admin_tabs/add_product.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
-import 'package:vasya_app/screens/add_category.dart';
-import 'package:vasya_app/screens/add_supplier.dart';
 import 'package:vasya_app/screens/landing.dart';
-import 'package:vasya_app/tabs/home_tab.dart';
 import 'package:vasya_app/tabs/cart_tab.dart';
+import 'package:vasya_app/tabs/home_tab.dart';
 import 'package:vasya_app/tabs/search_tab.dart';
 import 'package:vasya_app/widgets/bottom_tabs.dart';
+
+import 'file:///C:/Users/super/Documents/GitHub/flutterStore/vasya_app/lib/admin_tabs/add_category.dart';
+import 'file:///C:/Users/super/Documents/GitHub/flutterStore/vasya_app/lib/admin_tabs/add_supplier.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseService firebaseService = FirebaseService();
@@ -78,8 +80,7 @@ class _HomePageState extends State<HomePage> {
                   //
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                Constants.adminPhone)
+            if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Категорию'),
                 onTap: () {
@@ -91,21 +92,18 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                Constants.adminPhone)
+            if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Поставщика'),
                 onTap: () {
-                  load();
+                  loadSupplier();
                 },
               ),
-            if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                Constants.adminPhone)
+            if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
               ListTile(
                 title: Text('Добавить Товар'),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
+                  loadProduct();
                 },
               ),
             if (!FirebaseAuth.instance.currentUser.isAnonymous)
@@ -183,18 +181,37 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void load() {
+  void loadSupplier() {
     widget.firebaseService.categoriesRef.get().then(
           (value) => Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => AddSupplier(
-                Map.fromIterable(
-                    value.docs.map((e) => e.data()['name']).toList(),
-                    value: (value) => false),
+                Map.fromIterable(value.docs.map((e) => e.data()['name'].toString()).toList(), value: (value) => false),
               ),
             ),
           ),
+        );
+  }
+
+  void loadProduct() {
+    widget.firebaseService.categoriesRef.get().then(
+          (value) => widget.firebaseService.suppliersRef.get().then(
+                (value2) => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddProduct(
+                      value.docs
+                          .map<DropdownMenuItem<String>>((e) => DropdownMenuItem(
+                                value: e.data()['name'].toString(),
+                                child: Text(e.data()['name'].toString()),
+                              ))
+                          .toList(),
+                      value2,
+                    ),
+                  ),
+                ),
+              ),
         );
   }
 }

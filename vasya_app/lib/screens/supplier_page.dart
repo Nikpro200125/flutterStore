@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/admin_tabs/edit_product.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/product_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class SupplierPage extends StatefulWidget {
+  final FirebaseService firebaseService = FirebaseService();
   final String supplierId;
   final String category;
 
@@ -76,8 +79,7 @@ class _SupplierPageState extends State<SupplierPage> {
                             ),
                           ),
                           Center(
-                            child:
-                                Text("${snapshot.data.data()['description']}"),
+                            child: Text("${snapshot.data.data()['description']}"),
                           ),
                         ],
                       ),
@@ -96,8 +98,7 @@ class _SupplierPageState extends State<SupplierPage> {
                     FutureBuilder<QuerySnapshot>(
                       future: firebaseService.productsRef
                           .where('category', isEqualTo: widget.category)
-                          .where('supplier',
-                              isEqualTo: snapshot.data.data()['name'])
+                          .where('supplier', isEqualTo: snapshot.data.data()['name'])
                           .get(),
                       builder: (context, snapshot2) {
                         if (snapshot2.hasError)
@@ -106,18 +107,17 @@ class _SupplierPageState extends State<SupplierPage> {
                               "Ошибка ${snapshot.error}",
                             ),
                           );
-                        if (snapshot2.connectionState == ConnectionState.done)
-                          if (snapshot2.data.size == 0)
-                            return Center(
-                              child: Text(
-                                'У этого поставщика пока нет товаров...',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                                textAlign: TextAlign.center,
+                        if (snapshot2.connectionState == ConnectionState.done) if (snapshot2.data.size == 0)
+                          return Center(
+                            child: Text(
+                              'У этого поставщика пока нет товаров...',
+                              style: TextStyle(
+                                fontSize: 16,
                               ),
-                            );
-                          else
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        else
                           return Column(
                             children: snapshot2.data.docs.map(
                               (document) {
@@ -152,8 +152,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                           height: 100,
                                           width: 100,
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(12),
                                             child: Image.network(
                                               "${document.data()['logo']}",
                                               fit: BoxFit.fill,
@@ -185,8 +184,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                                   top: 60,
                                                 ),
                                                 child: Text(
-                                                  "${document.data()['price']}" +
-                                                      Constants.currencySign,
+                                                  "${document.data()['price']}" + Constants.currencySign,
                                                   style: TextStyle(
                                                     color: Color(0xFFED8C72),
                                                     fontSize: 18,
@@ -196,9 +194,11 @@ class _SupplierPageState extends State<SupplierPage> {
                                             ],
                                           ),
                                         ),
-                                        if (FirebaseAuth.instance.currentUser.phoneNumber ==
-                                            Constants.adminPhone)
+                                        if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
                                           GestureDetector(
+                                            onLongPress: () {
+                                              if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone) load(document.id);
+                                            },
                                             onTap: () {
                                               return showDialog(
                                                 context: context,
@@ -218,11 +218,12 @@ class _SupplierPageState extends State<SupplierPage> {
                                                         ),
                                                       ),
                                                       onPressed: () {
-                                                        setState(() {
-                                                          firebaseService.productsRef
-                                                              .doc(document.id)
-                                                              .delete();
-                                                        });
+                                                        FirebaseStorage.instance.refFromURL(document.data()['logo']).delete();
+                                                        setState(
+                                                          () {
+                                                            firebaseService.productsRef.doc(document.id).delete();
+                                                          },
+                                                        );
                                                         Navigator.pop(context);
                                                       },
                                                     ),
@@ -230,8 +231,7 @@ class _SupplierPageState extends State<SupplierPage> {
                                                       child: Text(
                                                         'Отмена',
                                                       ),
-                                                      onPressed: () =>
-                                                          Navigator.pop(context),
+                                                      onPressed: () => Navigator.pop(context),
                                                     ),
                                                   ],
                                                 ),
@@ -285,5 +285,30 @@ class _SupplierPageState extends State<SupplierPage> {
         },
       ),
     );
+  }
+
+  void load(String docId) {
+    widget.firebaseService.categoriesRef.get().then(
+          (value) => widget.firebaseService.suppliersRef.get().then(
+                (value2) => widget.firebaseService.suppliersRef.doc(docId).get().then(
+                      (value3) => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditProduct(
+                            value.docs
+                                .map<DropdownMenuItem<String>>((e) => DropdownMenuItem(
+                                      value: e.data()['name'].toString(),
+                                      child: Text(e.data()['name'].toString()),
+                                    ))
+                                .toList(),
+                            value2,
+                            docId,
+                            value3,
+                          ),
+                        ),
+                      ),
+                    ),
+              ),
+        );
   }
 }

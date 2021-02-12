@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,7 +27,6 @@ class _AddSupplierState extends State<AddSupplier> {
   final descriptionController = TextEditingController();
   final priceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String dropDown;
 
   @override
   void dispose() {
@@ -47,11 +47,10 @@ class _AddSupplierState extends State<AddSupplier> {
             hasCartCounter: false,
           ),
           Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 16,
-            ),
             margin: EdgeInsets.only(
               top: 100,
+              left: 16,
+              right: 16,
             ),
             child: Form(
               key: _formKey,
@@ -114,16 +113,16 @@ class _AddSupplierState extends State<AddSupplier> {
                     child: Center(
                       child: image == null
                           ? Text(
-                        'изображение не выбрано',
-                        style: TextStyle(
-                          color: Colors.red,
-                        ),
-                      )
+                              'изображение не выбрано',
+                              style: TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
                           : Image.file(
-                        image,
-                        height: 150,
-                        width: 300,
-                      ),
+                              image,
+                              height: 150,
+                              width: 300,
+                            ),
                     ),
                   ),
                   Padding(
@@ -144,24 +143,23 @@ class _AddSupplierState extends State<AddSupplier> {
                       }
                       return null;
                     },
-                    builder: (context) =>
-                        Column(
-                          children: widget.l.keys.map(
-                                (String key) {
-                              return CheckboxListTile(
-                                title: Text(key),
-                                value: widget.l[key],
-                                onChanged: (bool value) {
-                                  setState(
-                                        () {
-                                      widget.l[key] = value;
-                                    },
-                                  );
+                    builder: (context) => Column(
+                      children: widget.l.keys.map(
+                        (String key) {
+                          return CheckboxListTile(
+                            title: Text(key),
+                            value: widget.l[key],
+                            onChanged: (bool value) {
+                              setState(
+                                () {
+                                  widget.l[key] = value;
                                 },
                               );
                             },
-                          ).toList(),
-                        ),
+                          );
+                        },
+                      ).toList(),
+                    ),
                   ),
                   CustomBtn(
                     onPressed: getImage,
@@ -214,24 +212,21 @@ class _AddSupplierState extends State<AddSupplier> {
       );
     } else {
       Reference firebaseStorage = FirebaseStorage.instance.ref().child(
-        'images/${image.path
-            .split('/')
-            .last}',
-      );
+            'images/suppliers/${image.path.split('/').last}',
+          );
       await firebaseStorage
           .putFile(image)
           .catchError(
-            (e) =>
-            ScaffoldMessenger.of(context).showSnackBar(
+            (e) => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Ошибка'),
               ),
             ),
-      )
+          )
           .whenComplete(
-            () {
+        () {
           firebaseStorage.getDownloadURL().then(
-                (value) {
+            (value) {
               imageUrl = value;
               widget.firebaseService.suppliersRef.add(
                 {
@@ -254,7 +249,7 @@ class _AddSupplierState extends State<AddSupplier> {
             MaterialPageRoute(
               builder: (context) => LandingPage(),
             ),
-                (route) => false,
+            (route) => false,
           );
         },
       );

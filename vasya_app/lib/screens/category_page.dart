@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:vasya_app/admin_tabs/edit_supplier.dart';
 import 'package:vasya_app/constants.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/supplier_page.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
 
 class CategoryPage extends StatefulWidget {
+  final FirebaseService firebaseService = FirebaseService();
   final String category;
 
   CategoryPage({this.category});
@@ -16,17 +19,13 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
-  final FirebaseService firebaseService = FirebaseService();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           FutureBuilder<QuerySnapshot>(
-            future: firebaseService.suppliersRef
-                .where('categories', arrayContains: widget.category)
-                .get(),
+            future: widget.firebaseService.suppliersRef.where('categories', arrayContains: widget.category).get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
@@ -50,6 +49,9 @@ class _CategoryPageState extends State<CategoryPage> {
                     children: snapshot.data.docs.map(
                       (document) {
                         return GestureDetector(
+                          onLongPress: () {
+                            if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone) load(document.id);
+                          },
                           onTap: () {
                             Navigator.push(
                               context,
@@ -118,8 +120,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          "Средняя цена:  ${document.data()['averageprice']}" +
-                                              Constants.currencySign,
+                                          "Средняя цена:  ${document.data()['averageprice']}" + Constants.currencySign,
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.white54,
@@ -129,9 +130,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                     ),
                                   ],
                                 ),
-                                if (FirebaseAuth
-                                        .instance.currentUser.phoneNumber ==
-                                    Constants.adminPhone)
+                                if (FirebaseAuth.instance.currentUser.phoneNumber == Constants.adminPhone)
                                   GestureDetector(
                                     onTap: () {
                                       return showDialog(
@@ -152,10 +151,9 @@ class _CategoryPageState extends State<CategoryPage> {
                                                 ),
                                               ),
                                               onPressed: () {
+                                                FirebaseStorage.instance.refFromURL(document.data()['logo']).delete();
                                                 setState(() {
-                                                  firebaseService.suppliersRef
-                                                      .doc(document.id)
-                                                      .delete();
+                                                  widget.firebaseService.suppliersRef.doc(document.id).delete();
                                                 });
                                                 Navigator.pop(context);
                                               },
@@ -164,8 +162,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                               child: Text(
                                                 'Отмена',
                                               ),
-                                              onPressed: () =>
-                                                  Navigator.pop(context),
+                                              onPressed: () => Navigator.pop(context),
                                             ),
                                           ],
                                         ),
@@ -203,5 +200,22 @@ class _CategoryPageState extends State<CategoryPage> {
         ],
       ),
     );
+  }
+
+  void load(String docId) {
+    widget.firebaseService.categoriesRef.get().then(
+          (value) => widget.firebaseService.suppliersRef.doc(docId).get().then(
+            (value2) {
+              Map<String, bool> l = Map.fromIterable(value.docs.map((e) => e.data()['name']).toList(), value: (value) => false);
+              List<String> current = List.castFrom(value2.data()['categories']);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditSupplier(l.map((key, value) => MapEntry(key, current.contains(key))), docId, value2),
+                ),
+              );
+            },
+          ),
+        );
   }
 }

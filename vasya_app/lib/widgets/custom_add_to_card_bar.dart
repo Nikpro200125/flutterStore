@@ -7,15 +7,10 @@ class AddToCard extends StatefulWidget {
   final String documentIdProduct;
   final String supplier;
   final String image;
-  final int price;
+  final double price;
   final String product;
 
-  AddToCard(
-      {this.documentIdProduct,
-      this.image,
-      this.price,
-      this.supplier,
-      this.product});
+  AddToCard({this.documentIdProduct, this.image, this.price, this.supplier, this.product});
 
   @override
   _AddToCardState createState() => _AddToCardState();
@@ -38,13 +33,6 @@ class _AddToCardState extends State<AddToCard> {
     super.dispose();
   }
 
-  final SnackBar snackBar = SnackBar(
-    content: Text('Продукт добавлен в корзину!'),
-  );
-  final SnackBar snackBarError = SnackBar(
-    content: Text('Нужно выбрать хотя бы один товар...'),
-  );
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,19 +46,14 @@ class _AddToCardState extends State<AddToCard> {
         color: Color(0xFFF4EADE),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CustomBtn(
             text: 'Добавить в корзину',
             outlineBtn: true,
-            onPressed: () async {
+            onPressed: () {
               if (counter != 0) {
-                await firebaseService.usersRef
-                    .doc(firebaseService.firebaseUser)
-                    .collection('cart')
-                    .doc(widget.documentIdProduct)
-                    .set(
+                firebaseService.usersRef.doc(firebaseService.firebaseUser).collection('cart').doc(widget.documentIdProduct).set(
                   {
                     'supplier': widget.supplier,
                     'quantity': counter,
@@ -78,10 +61,21 @@ class _AddToCardState extends State<AddToCard> {
                     'price': widget.price,
                     'product': widget.product,
                   },
+                ).whenComplete(
+                  () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Продукт добавлен в корзину!'),
+                      ),
+                    );
+                  },
                 );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else
-                ScaffoldMessenger.of(context).showSnackBar(snackBarError);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Нужно выбрать хотя бы один товар...'),
+                  ),
+                );
             },
           ),
           GestureDetector(
@@ -110,15 +104,14 @@ class _AddToCardState extends State<AddToCard> {
                   if (value.isNotEmpty) counter = int.parse(value);
                 },
               ),
-              onSubmitted: (value) => setState(
-                  () {
-                    if(value.isNotEmpty) counter = int.parse(value);
-                    else {
-                      counter = 0;
-                      controller.text = "0";
-                    }
-                  }
-              ),
+              onSubmitted: (value) => setState(() {
+                if (value.isNotEmpty)
+                  counter = int.parse(value);
+                else {
+                  counter = 0;
+                  controller.text = "0";
+                }
+              }),
               textAlign: TextAlign.center,
               keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
@@ -128,9 +121,7 @@ class _AddToCardState extends State<AddToCard> {
               decoration: InputDecoration(
                 border: InputBorder.none,
               ),
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
+              inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
             ),
           ),
           GestureDetector(
