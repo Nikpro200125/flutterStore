@@ -133,8 +133,6 @@ class _EditCategoryState extends State<EditCategory> {
       () {
         if (pickedFile != null) {
           image = File(pickedFile.path);
-        } else {
-          print('No image selected.');
         }
       },
     );
@@ -148,7 +146,7 @@ class _EditCategoryState extends State<EditCategory> {
             'name': controllerName.text,
           },
         ).catchError(
-          (e) => ScaffoldMessenger.of(context).showSnackBar(
+          (e) => Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('Ошибка'),
             ),
@@ -161,7 +159,7 @@ class _EditCategoryState extends State<EditCategory> {
         await firebaseStorage
             .putFile(image)
             .catchError(
-              (e) => ScaffoldMessenger.of(context).showSnackBar(
+              (e) => Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Ошибка'),
                 ),
@@ -183,7 +181,7 @@ class _EditCategoryState extends State<EditCategory> {
               },
             );
       }
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Категория обновлена'),
         ),

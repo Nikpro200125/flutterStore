@@ -189,8 +189,6 @@ class _AddSupplierState extends State<AddSupplier> {
     setState(() {
       if (pickedFile != null) {
         image = File(pickedFile.path);
-      } else {
-        print('Изображение не выбрано');
       }
     });
   }
@@ -199,13 +197,13 @@ class _AddSupplierState extends State<AddSupplier> {
     Map<String, bool> x = {...widget.l};
     x.removeWhere((key, value) => !value);
     if (_formKey.currentState.validate()) if (image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
       );
     } else if (double.tryParse(priceController.text) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Некорректная средняя цена'),
         ),
@@ -217,7 +215,7 @@ class _AddSupplierState extends State<AddSupplier> {
       await firebaseStorage
           .putFile(image)
           .catchError(
-            (e) => ScaffoldMessenger.of(context).showSnackBar(
+            (e) => Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text('Ошибка'),
               ),
@@ -239,7 +237,7 @@ class _AddSupplierState extends State<AddSupplier> {
               );
             },
           );
-          ScaffoldMessenger.of(context).showSnackBar(
+          Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('Поставщик добавлен'),
             ),

@@ -100,7 +100,7 @@ class _CodePageState extends State<CodePage> {
                       _signInFormLoading = true;
                     });
                     if (controller.text.length != 6) {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Введите корректный код'),
                         ),
@@ -108,8 +108,7 @@ class _CodePageState extends State<CodePage> {
                       setState(() {
                         _signInFormLoading = false;
                       });
-                    }
-                    else
+                    } else
                       signIn(controller.text);
                   },
                 ),
@@ -135,12 +134,12 @@ class _CodePageState extends State<CodePage> {
   }
 
   Future<void> verifyPhoneNumber() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
+    FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+' + widget.phone,
       timeout: const Duration(seconds: 60),
       verificationCompleted: (AuthCredential authCredential) {},
       verificationFailed: (FirebaseAuthException e) {
-        ScaffoldMessenger.of(context).showSnackBar(
+        Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text(e.message),
           ),
@@ -165,9 +164,21 @@ class _CodePageState extends State<CodePage> {
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
-        ScaffoldMessenger.of(context).showSnackBar(
+        Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('Неверный код'),
+          ),
+        );
+        await Future.delayed(
+          Duration(
+            seconds: 4,
+          ),
+        );
+      } else if (e.code == 'unknown') {
+      } else {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.code),
           ),
         );
         await Future.delayed(
@@ -175,19 +186,9 @@ class _CodePageState extends State<CodePage> {
             seconds: 3,
           ),
         );
-      } else
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.code),
-          ),
-        );
-      await Future.delayed(
-        Duration(
-          seconds: 3,
-        ),
-      );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Error'),
         ),

@@ -45,7 +45,7 @@ class CustomActionBar extends StatelessWidget {
           if (_hasBackArrow)
             GestureDetector(
               onTap: () {
-                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                Scaffold.of(context).removeCurrentSnackBar();
                 Navigator.pop(context);
               },
               child: Container(

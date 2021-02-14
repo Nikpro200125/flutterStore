@@ -63,7 +63,7 @@ class _AddToCardState extends State<AddToCard> {
                   },
                 ).whenComplete(
                   () {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    Scaffold.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Продукт добавлен в корзину!'),
                       ),
@@ -71,7 +71,7 @@ class _AddToCardState extends State<AddToCard> {
                   },
                 );
               } else
-                ScaffoldMessenger.of(context).showSnackBar(
+                Scaffold.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Нужно выбрать хотя бы один товар...'),
                   ),

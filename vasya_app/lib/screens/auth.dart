@@ -108,16 +108,19 @@ class _AuthorizationPageState extends State<AuthorizationPage> {
                     });
                     if (controller.text.length == 11) {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => CodePage(controller.text)));
-                    } else if(controller.text.isEmpty)ScaffoldMessenger.of(context).showSnackBar(
+                    } else if(controller.text.isEmpty)Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Введите номер телефона!'),
                         ),
                       );
-                    else ScaffoldMessenger.of(context).showSnackBar(
+                    else Scaffold.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Введите корректный номер!'),
                         ),
                       );
+                    setState(() {
+                      _signInFormLoading = false;
+                    });
                   },
                   isLoading: _signInFormLoading,
                 ),

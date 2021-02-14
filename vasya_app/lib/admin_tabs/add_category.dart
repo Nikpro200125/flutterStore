@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:images_picker/images_picker.dart';
 import 'package:vasya_app/firebase_service.dart';
 import 'package:vasya_app/screens/landing.dart';
 import 'package:vasya_app/widgets/custom_action_bar.dart';
@@ -19,7 +19,7 @@ class AddCategory extends StatefulWidget {
 class _AddCategoryState extends State<AddCategory> {
   File image;
   String imageUrl;
-  final picker = ImagePicker();
+  final picker = ImagesPicker();
   final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -100,19 +100,23 @@ class _AddCategoryState extends State<AddCategory> {
   }
 
   Future getImage() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-      } else {
-        print('Изображение не выбрано');
-      }
-    });
+    try {
+      await ImagesPicker.pick(count: 1, pickType: PickType.image).then(
+        (value) => setState(() {
+          if (value != null) {
+            image = File(value.elementAt(0).path);
+          } else
+            print('blyat');
+        }),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future save() async {
     if (_formKey.currentState.validate()) if (image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
@@ -124,7 +128,7 @@ class _AddCategoryState extends State<AddCategory> {
       await firebaseStorage
           .putFile(image)
           .catchError(
-            (e) => ScaffoldMessenger.of(context).showSnackBar(
+            (e) => Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text('Ошибка'),
               ),
@@ -145,7 +149,7 @@ class _AddCategoryState extends State<AddCategory> {
               )
             },
           );
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Категория добавлена'),
         ),

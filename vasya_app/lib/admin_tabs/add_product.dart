@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -211,8 +210,6 @@ class _AddProductState extends State<AddProduct> {
       () {
         if (pickedFile != null) {
           image = File(pickedFile.path);
-        } else {
-          print('Изображение не выбрано');
         }
       },
     );
@@ -220,13 +217,13 @@ class _AddProductState extends State<AddProduct> {
 
   Future save() async {
     if (_formKey.currentState.validate()) if (image == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
       );
     } else if (double.tryParse(priceController.text) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Некорректная цена'),
         ),
@@ -237,7 +234,7 @@ class _AddProductState extends State<AddProduct> {
           );
       await firebaseStorage
           .putFile(image)
-          .catchError((e) => ScaffoldMessenger.of(context).showSnackBar(
+          .catchError((e) => Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Ошибка'),
                 ),
@@ -260,7 +257,7 @@ class _AddProductState extends State<AddProduct> {
               );
             },
           );
-          ScaffoldMessenger.of(context).showSnackBar(
+          Scaffold.of(context).showSnackBar(
             SnackBar(
               content: Text('Товар добавлен'),
             ),

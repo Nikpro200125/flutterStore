@@ -231,8 +231,6 @@ class _EditProductState extends State<EditProduct> {
       () {
         if (pickedFile != null) {
           image = File(pickedFile.path);
-        } else {
-          print('Изображение не выбрано');
         }
       },
     );
@@ -242,7 +240,7 @@ class _EditProductState extends State<EditProduct> {
     getSearchString(nameController.text);
     if (_formKey.currentState.validate()) {
       if (double.tryParse(priceController.text) == null)
-        ScaffoldMessenger.of(context).showSnackBar(
+        Scaffold.of(context).showSnackBar(
           SnackBar(
             content: Text('Некорректная цена'),
           ),
@@ -264,7 +262,7 @@ class _EditProductState extends State<EditProduct> {
             );
         await firebaseStorage
             .putFile(image)
-            .catchError((e) => ScaffoldMessenger.of(context).showSnackBar(
+            .catchError((e) => Scaffold.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Ошибка'),
                   ),
@@ -288,7 +286,7 @@ class _EditProductState extends State<EditProduct> {
           );
         });
       }
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Товар обновлен'),
         ),

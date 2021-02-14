@@ -209,15 +209,13 @@ class _EditSupplierState extends State<EditSupplier> {
     setState(() {
       if (pickedFile != null) {
         image = File(pickedFile.path);
-      } else {
-        print('Изображение не выбрано');
       }
     });
   }
 
   Future save() async {
     if (double.tryParse(priceController.text) == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Некорректная средняя цена'),
         ),
@@ -243,7 +241,7 @@ class _EditSupplierState extends State<EditSupplier> {
         await firebaseStorage
             .putFile(image)
             .catchError(
-              (e) => ScaffoldMessenger.of(context).showSnackBar(
+              (e) => Scaffold.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Ошибка'),
                 ),
@@ -266,7 +264,7 @@ class _EditSupplierState extends State<EditSupplier> {
           );
         });
       }
-      ScaffoldMessenger.of(context).showSnackBar(
+      Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Поставщик обновлен'),
         ),
