@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "716038275808",
+    "firebase_url": "https://vasyaapp-4c790-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "vasyaapp-4c790",
+    "storage_bucket": "vasyaapp-4c790.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716038275808:android:a3e40d2d443510959ac685",
+        "android_client_info": {
+          "package_name": "com.nikita.store"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716038275808-7epvn9d3u7f34634h7cj6k952lpnk8oe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikita.store",
+            "certificate_hash": "d513a9068ebc014b9af8ee5764364ab99394f9a5"
+          }
+        },
+        {
+          "client_id": "716038275808-nvadc5953bkgbkbdm0iob5dfj01n10s1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFZ050AH9QtYBYAkgCp6lgwUVYQhek43U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716038275808-nvadc5953bkgbkbdm0iob5dfj01n10s1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "716038275808-hv3lo178si0gs9u52jssjof8qvvejs0l.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nikita.vasya-app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
