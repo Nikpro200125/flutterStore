@@ -37,8 +37,10 @@ class _EditProductState extends State<EditProduct> {
   void initState() {
     super.initState();
     nameController = TextEditingController(text: widget.product.data()['name']);
-    priceController = TextEditingController(text: widget.product.data()['price'].toString());
-    descriptionController = TextEditingController(text: widget.product.data()['description']);
+    priceController =
+        TextEditingController(text: widget.product.data()['price'].toString());
+    descriptionController =
+        TextEditingController(text: widget.product.data()['description']);
     imageUrl = widget.product.data()['logo'];
     category = widget.product.data()['category'];
     supplier = widget.product.data()['supplier'];
@@ -56,7 +58,8 @@ class _EditProductState extends State<EditProduct> {
   Widget build(BuildContext context) {
     if (category != null)
       _suppliers = widget.suppliers.docs
-          .where((element) => List.castFrom(element.data()['categories']).contains(category))
+          .where((element) =>
+              List.castFrom(element.data()['categories']).contains(category))
           .map<DropdownMenuItem<String>>((e) => DropdownMenuItem(
                 child: Text(e.data()['name'].toString()),
                 value: e.data()['name'].toString(),
@@ -133,7 +136,9 @@ class _EditProductState extends State<EditProduct> {
                     ),
                   ),
                   DropdownButtonFormField(
-                    hint: widget.categories.length == 0 ? Text('Нет доступных категорий') : Text('Выберите категорию'),
+                    hint: widget.categories.length == 0
+                        ? Text('Нет доступных категорий')
+                        : Text('Выберите категорию'),
                     validator: (value) {
                       if (supplier == null) return "Выберите категорию";
                       return null;
@@ -148,7 +153,9 @@ class _EditProductState extends State<EditProduct> {
                     items: widget.categories,
                     icon: Icon(
                       Icons.arrow_downward,
-                      color: widget.categories.length == 0 ? Colors.black : Theme.of(context).accentColor,
+                      color: widget.categories.length == 0
+                          ? Colors.black
+                          : Theme.of(context).accentColor,
                     ),
                     iconSize: 24,
                     elevation: 16,
@@ -156,7 +163,9 @@ class _EditProductState extends State<EditProduct> {
                   ),
                   if (category != null)
                     DropdownButtonFormField(
-                      hint: _suppliers.length == 0 ? Text('Нет доступных поставщиков') : Text('Выберите поставщика'),
+                      hint: _suppliers.length == 0
+                          ? Text('Нет доступных поставщиков')
+                          : Text('Выберите поставщика'),
                       validator: (value) {
                         if (supplier == null) return "Выберите поставщика";
                         return null;
@@ -170,7 +179,9 @@ class _EditProductState extends State<EditProduct> {
                       items: _suppliers,
                       icon: Icon(
                         Icons.arrow_downward,
-                        color: _suppliers.length == 0 ? Colors.black : Theme.of(context).accentColor,
+                        color: _suppliers.length == 0
+                            ? Colors.black
+                            : Theme.of(context).accentColor,
                       ),
                       iconSize: 24,
                       elevation: 16,
@@ -297,13 +308,15 @@ class _EditProductState extends State<EditProduct> {
 
   List<String> getSearchString(String name) {
     List<String> x = [];
-    name.split(' ').forEach((element) {
-      String temp = "";
-      for (int i = 0; i < element.length; i++) {
-        temp += element[i];
-        x.add(temp);
-      }
-    });
+    name.toLowerCase().split(' ').forEach(
+      (element) {
+        String temp = "";
+        for (int i = 0; i < element.length; i++) {
+          temp += element[i];
+          x.add(temp);
+        }
+      },
+    );
     return x;
   }
 }

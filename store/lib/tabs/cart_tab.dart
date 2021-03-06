@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store/constants.dart';
 import 'package:store/firebase_service.dart';
@@ -31,7 +32,7 @@ class _CartTabState extends State<CartTab> {
                 if (snapshot.hasError) {
                   return Scaffold(
                     body: Center(
-                      child: Text('Error ${snapshot.error}'),
+                      child: Text('Ошибка ${snapshot.error}'),
                     ),
                   );
                 }
@@ -46,157 +47,168 @@ class _CartTabState extends State<CartTab> {
                   return ListView(
                     padding: EdgeInsets.only(
                       top: 90,
-                      bottom: 12,
+                      bottom: 70,
                     ),
-                    children: snapshot.data.docs.map((document) {
-                      return GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductPage(
-                              documentIdProduct: document.id,
-                            ),
-                          ),
-                        ),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 120,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: Color(0xFFF4EADE),
-                          ),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.symmetric(
-                                  vertical: 10,
-                                  horizontal: 10,
+                    children: [
+                      Column(
+                        children: snapshot.data.docs.map(
+                          (document) {
+                            return GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductPage(
+                                    documentIdProduct: document.id,
+                                  ),
                                 ),
-                                height: 100,
-                                width: 100,
-                                child: ClipRRect(
+                              ),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 120,
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  child: Image.network(
-                                    "${document.data()['logo']}",
-                                    fit: BoxFit.fill,
-                                  ),
+                                  color: Color(0xFFF4EADE),
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      top: 20,
-                                    ),
-                                    child: Text(
-                                      "${document.data()['product']}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 18,
-                                        color: Colors.black,
+                                margin: EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 10,
                                       ),
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      top: 10,
-                                    ),
-                                    child: Text(
-                                      "${document.data()['supplier']}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                      ),
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      top: 10,
-                                    ),
-                                    child: Text(
-                                      "Итого: ${document.data()['quantity']} × ${document.data()['price']}" +
-                                          Constants.currencySign,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 18,
-                                        color: Theme.of(context).accentColor,
-                                      ),
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  return showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text(
-                                        'Подтвердить удаление',
-                                        style: TextStyle(
-                                          color: Colors.red,
+                                      height: 100,
+                                      width: 100,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.network(
+                                          "${document.data()['logo']}",
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
-                                      actions: [
-                                        TextButton(
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                            top: 20,
+                                          ),
                                           child: Text(
-                                            'Удалить',
+                                            "${document.data()['product']}",
                                             style: TextStyle(
-                                              color: Colors.red,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
+                                              color: Colors.black,
                                             ),
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
                                           ),
-                                          onPressed: () {
-                                            setState(() {
-                                              firebaseService.usersRef
-                                                  .doc(FirebaseAuth
-                                                      .instance.currentUser.uid)
-                                                  .collection('cart')
-                                                  .doc(document.id)
-                                                  .delete();
-                                            });
-                                            Navigator.pop(context);
-                                          },
                                         ),
-                                        TextButton(
-                                          child: Text(
-                                            'Отмена',
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                            top: 10,
                                           ),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
+                                          child: Text(
+                                            "${document.data()['supplier']}",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                            ),
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(
+                                            top: 10,
+                                          ),
+                                          child: Text(
+                                            "Итого: ${document.data()['quantity']} × ${document.data()['price']}" +
+                                                Constants.currencySign,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 18,
+                                              color:
+                                                  Theme.of(context).accentColor,
+                                            ),
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                    top: 8,
-                                    right: 8,
-                                  ),
-                                  child: Icon(
-                                    Icons.close,
-                                    color: Colors.red,
-                                  ),
-                                  alignment: Alignment.topRight,
+                                    GestureDetector(
+                                      onTap: () {
+                                        return showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text(
+                                              'Подтвердить удаление',
+                                              style: TextStyle(
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                child: Text(
+                                                  'Удалить',
+                                                  style: TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    firebaseService.usersRef
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser
+                                                            .uid)
+                                                        .collection('cart')
+                                                        .doc(document.id)
+                                                        .delete();
+                                                  });
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text(
+                                                  'Отмена',
+                                                ),
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                          top: 8,
+                                          right: 8,
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          color: Colors.red,
+                                        ),
+                                        alignment: Alignment.topRight,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    ],
                   );
                 }
 
@@ -228,6 +240,37 @@ class _CartTabState extends State<CartTab> {
                   },
                 ),
               ],
+            ),
+          if (!FirebaseAuth.instance.currentUser.isAnonymous)
+            FutureBuilder<QuerySnapshot>(
+              future: firebaseService.usersRef
+                  .doc(FirebaseService().firebaseUser)
+                  .collection('cart')
+                  .get(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Scaffold(
+                    body: Center(
+                      child: Text('Ошибка ${snapshot.error}'),
+                    ),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.data.size != 0)
+                    return Positioned(
+                      bottom: 10,
+                      left: 4,
+                      right: 4,
+                      child: CustomBtn(
+                        text: 'Отправить заявку',
+                      ),
+                    );
+                  return Container();
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
           CustomActionBar(
             title: "Корзина",

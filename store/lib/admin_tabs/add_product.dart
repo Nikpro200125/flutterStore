@@ -31,6 +31,7 @@ class _AddProductState extends State<AddProduct> {
   List<DropdownMenuItem> _suppliers;
   String category;
   String supplier;
+  bool isSaving = false;
 
   @override
   void dispose() {
@@ -189,6 +190,7 @@ class _AddProductState extends State<AddProduct> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: CustomBtn(
+                      isLoading: isSaving,
                       onPressed: () {
                         save();
                       },
@@ -216,18 +218,27 @@ class _AddProductState extends State<AddProduct> {
   }
 
   Future save() async {
+    setState(() {
+      isSaving = true;
+    });
     if (_formKey.currentState.validate()) if (image == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Изображение не выбрано'),
         ),
       );
+      setState(() {
+        isSaving = false;
+      });
     } else if (double.tryParse(priceController.text) == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Некорректная цена'),
         ),
       );
+      setState(() {
+        isSaving = false;
+      });
     } else {
       Reference firebaseStorage = FirebaseStorage.instance.ref().child(
             'images/products/${image.path.split('/').last}',
@@ -275,7 +286,7 @@ class _AddProductState extends State<AddProduct> {
   }
   List<String> getSearchString(String name){
     List<String> x = [];
-    name.split(' ').forEach((element){
+    name.toLowerCase().split(' ').forEach((element){
       String temp = "";
       for (int i = 0; i < element.length; i++) {
         temp += element[i];

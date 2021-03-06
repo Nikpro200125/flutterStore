@@ -136,7 +136,7 @@ class _CodePageState extends State<CodePage> {
   Future<void> verifyPhoneNumber() async {
     FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: '+' + widget.phone,
-      timeout: const Duration(seconds: 60),
+      timeout: const Duration(seconds: 15),
       verificationCompleted: (AuthCredential authCredential) {},
       verificationFailed: (FirebaseAuthException e) {
         ScaffoldMessenger.of(context).showSnackBar(
