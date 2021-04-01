@@ -6,6 +6,7 @@ import 'package:store/constants.dart';
 import 'package:store/firebase_service.dart';
 import 'package:store/screens/landing.dart';
 import 'package:store/screens/product_page.dart';
+import 'package:store/screens/sendOrder.dart';
 import 'package:store/widgets/custom_action_bar.dart';
 import 'package:store/widgets/custom_btn.dart';
 
@@ -89,6 +90,15 @@ class _CartTabState extends State<CartTab> {
                                         child: Image.network(
                                           "${document.data()['logo']}",
                                           fit: BoxFit.fill,
+                                          errorBuilder: (BuildContext context,
+                                              Object exception,
+                                              StackTrace stackTrace) {
+                                            return Icon(
+                                              Icons.warning,
+                                              size: 60,
+                                              color: Colors.red,
+                                            );
+                                          },
                                         ),
                                       ),
                                     ),
@@ -263,6 +273,12 @@ class _CartTabState extends State<CartTab> {
                       right: 4,
                       child: CustomBtn(
                         text: 'Отправить заявку',
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SendOrder(),
+                          ),
+                        ),
                       ),
                     );
                   return Container();
