@@ -6,7 +6,7 @@ import 'package:store/constants.dart';
 import 'package:store/firebase_service.dart';
 import 'package:store/screens/landing.dart';
 import 'package:store/screens/product_page.dart';
-import 'package:store/screens/sendOrder.dart';
+import 'package:store/screens/send_order.dart';
 import 'package:store/widgets/custom_action_bar.dart';
 import 'package:store/widgets/custom_btn.dart';
 
@@ -177,10 +177,7 @@ class _CartTabState extends State<CartTab> {
                                                 onPressed: () {
                                                   setState(() {
                                                     firebaseService.usersRef
-                                                        .doc(FirebaseAuth
-                                                            .instance
-                                                            .currentUser
-                                                            .uid)
+                                                        .doc(firebaseService.firebaseUser)
                                                         .collection('cart')
                                                         .doc(document.id)
                                                         .delete();
@@ -254,7 +251,7 @@ class _CartTabState extends State<CartTab> {
           if (!FirebaseAuth.instance.currentUser.isAnonymous)
             FutureBuilder<QuerySnapshot>(
               future: firebaseService.usersRef
-                  .doc(FirebaseService().firebaseUser)
+                  .doc(firebaseService.firebaseUser)
                   .collection('cart')
                   .get(),
               builder: (context, snapshot) {
