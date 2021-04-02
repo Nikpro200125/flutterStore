@@ -7,7 +7,7 @@ import 'package:store/firebase_service.dart';
 import 'package:store/screens/landing.dart';
 import 'package:store/screens/product_page.dart';
 import 'package:store/screens/send_order.dart';
-import 'package:store/widgets/custom_action_bar.dart';
+import 'package:store/widgets/action_bar.dart';
 import 'package:store/widgets/custom_btn.dart';
 
 class CartTab extends StatefulWidget {

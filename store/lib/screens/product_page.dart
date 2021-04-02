@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:store/constants.dart';
 import 'package:store/firebase_service.dart';
 import 'package:store/screens/landing.dart';
-import 'package:store/widgets/custom_action_bar.dart';
-import 'package:store/widgets/custom_add_to_card_bar.dart';
+import 'package:store/widgets/action_bar.dart';
+import 'package:store/widgets/add_to_card_bar.dart';
 import 'package:store/widgets/custom_btn.dart';
 
 class ProductPage extends StatefulWidget {

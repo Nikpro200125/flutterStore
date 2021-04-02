@@ -6,7 +6,7 @@ import 'package:store/admin_tabs/edit_product.dart';
 import 'package:store/constants.dart';
 import 'package:store/firebase_service.dart';
 import 'package:store/screens/product_page.dart';
-import 'package:store/widgets/custom_action_bar.dart';
+import 'package:store/widgets/action_bar.dart';
 
 class SupplierPage extends StatefulWidget {
   final FirebaseService firebaseService = FirebaseService();

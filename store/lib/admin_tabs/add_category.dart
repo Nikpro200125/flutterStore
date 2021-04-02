@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:store/firebase_service.dart';
 import 'package:store/screens/landing.dart';
-import 'package:store/widgets/custom_action_bar.dart';
+import 'package:store/widgets/action_bar.dart';
 import 'package:store/widgets/custom_btn.dart';
 
 class AddCategory extends StatefulWidget {
